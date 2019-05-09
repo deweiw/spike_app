@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Demo Application</string>
+    <string name="skill_label">Skills</string>
+    <string name="project_label">Projects</string>
+    <string name="experience_label">Experiences</string>
+    <string name="more_label">View more</string>
+</resources>

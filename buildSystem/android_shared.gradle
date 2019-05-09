@@ -1,0 +1,29 @@
+/**
+ * Common configuration for all modules
+ */
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+apply from: "${rootDir}/buildsystem/project_shared.gradle"
+apply from: "${rootDir}/buildsystem/android_environment.gradle"
+
+dependencies {
+    implementation ApplicationImplementationDependencies.values()
+    implementation AndroidDependencies.values()
+
+    annotationProcessor(ApplicationAnnotationDependencies.daggerCompiler) {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+    }
+
+    //Dagger Android
+    annotationProcessor DaggerAndroid.daggerAndroidProcessor
+    implementation DaggerAndroid.daggerSupport
+    kapt DaggerAndroid.daggerAndroidProcessor
+
+    //Android architecture components
+    implementation AndroidArchitectureComponentsDependencies.lifecycleExtensions
+    kapt AndroidArchitectureComponentsDependencies.lifecycleCompiler
+
+    // Unit test
+    androidTestImplementation AndroidTestDependencies.values()
+}
