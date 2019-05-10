@@ -2,7 +2,7 @@ package com.dandv.spike.di.component
 
 import android.app.Application
 import com.dandv.spike.AppApplication
-import com.dandv.spike.di.module.base.ActivityBuilderModule
+import com.dandv.spike.di.module.ui.ActivityBuilderModule
 import com.dandv.spike.di.module.base.AppModule
 import dagger.BindsInstance
 import dagger.Component

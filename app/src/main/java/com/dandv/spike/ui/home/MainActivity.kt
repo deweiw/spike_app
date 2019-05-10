@@ -3,11 +3,13 @@ package com.dandv.spike.ui.home
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.dandv.spike.R
 import com.dandv.spike.common.toVisibility
+import com.dandv.spike.ui.collection.CollectionDetailActivity
 import com.dandv.spike.ui.home.model.HomePageUiModel
 import com.dandv.spike.ui.home.model.HomePageViewState
 import com.squareup.picasso.Picasso
@@ -32,6 +34,19 @@ class MainActivity : DaggerAppCompatActivity() {
         homePageViewModel.getPageViewState().observe(this, Observer {
             onPageStateChanged(it)
         })
+
+        skills_layout.setOnClickListener {
+            homePageViewModel.requestSkillsCollection()
+        }
+
+        project_layout.setOnClickListener {
+
+        }
+
+        experience_layout.setOnClickListener {
+
+        }
+
     }
 
     override fun onResumeFragments() {
@@ -45,13 +60,19 @@ class MainActivity : DaggerAppCompatActivity() {
                 HomePageViewState.Loading -> handleLoadingView()
                 is HomePageViewState.Success -> handleContentView(it.homePageUiModel)
                 HomePageViewState.Error -> handleErrorView()
+                HomePageViewState.Navigation -> navigateToCollectionPage()
             }
         }
     }
 
     private fun handleErrorView() {
         // TODO Can show an error view here
+        progress_bar.visibility = View.GONE
         Log.i(MainActivity::class.simpleName, "error")
+    }
+
+    private fun navigateToCollectionPage() {
+        startActivity(Intent(this, CollectionDetailActivity::class.java))
     }
 
     private fun handleLoadingView() {
