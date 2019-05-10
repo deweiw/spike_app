@@ -6,6 +6,8 @@ import com.dandv.domain.profile.entity.collection.CollectionEntity
 import com.dandv.domain.profile.usecase.GetCollectionUseCase
 import com.dandv.spike.common.BaseViewModel
 import com.dandv.spike.common.CoroutineScopeFactory
+import com.dandv.spike.ui.collection.mapper.ExperienceDataToExperienceItemUiModelMapper
+import com.dandv.spike.ui.collection.mapper.ProjectDataToProjectItemUiModelMapper
 import com.dandv.spike.ui.collection.mapper.SkillDataToSkillItemUiModelMapper
 import com.dandv.spike.ui.collection.model.CollectionPageViewState
 import kotlinx.coroutines.launch
@@ -15,6 +17,8 @@ class CollectionPageViewModel
 @Inject constructor(
     private val getCollectionUseCase: GetCollectionUseCase,
     private val skillDataToSkillItemUiModelMapper: SkillDataToSkillItemUiModelMapper,
+    private val projectDataToProjectItemUiModelMapper: ProjectDataToProjectItemUiModelMapper,
+    private val experienceDataToExperienceItemUiModelMapper: ExperienceDataToExperienceItemUiModelMapper,
     coroutineScopeFactory: CoroutineScopeFactory
 ) : BaseViewModel(coroutineScopeFactory) {
 
@@ -30,6 +34,16 @@ class CollectionPageViewModel
                 is CollectionEntity.SkillCollection -> collectionPageViewState.postValue(
                     CollectionPageViewState.Skills(result.skills.map {
                         skillDataToSkillItemUiModelMapper.mapToPresentation(it)
+                    })
+                )
+                is CollectionEntity.ProjectCollection -> collectionPageViewState.postValue(
+                    CollectionPageViewState.Projects(result.projects.map {
+                        projectDataToProjectItemUiModelMapper.mapToPresentation(it)
+                    })
+                )
+                is CollectionEntity.ExperienceCollection -> collectionPageViewState.postValue(
+                    CollectionPageViewState.Experiences(result.experiences.map {
+                        experienceDataToExperienceItemUiModelMapper.mapToPresentation(it)
                     })
                 )
                 CollectionEntity.Empty,

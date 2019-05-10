@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import com.dandv.domain.profile.entity.collection.CollectionType
 import com.dandv.spike.R
 import com.dandv.spike.common.toVisibility
 import com.dandv.spike.ui.collection.CollectionDetailActivity
@@ -36,15 +37,15 @@ class MainActivity : DaggerAppCompatActivity() {
         })
 
         skills_layout.setOnClickListener {
-            homePageViewModel.requestSkillsCollection()
+            homePageViewModel.requestCollection(CollectionType.SKILLS)
         }
 
         project_layout.setOnClickListener {
-
+            homePageViewModel.requestCollection(CollectionType.PROJECTS)
         }
 
         experience_layout.setOnClickListener {
-
+            homePageViewModel.requestCollection(CollectionType.EXPERIENCES)
         }
 
     }
@@ -68,7 +69,7 @@ class MainActivity : DaggerAppCompatActivity() {
     private fun handleErrorView() {
         // TODO Can show an error view here
         progress_bar.visibility = View.GONE
-        Log.i(MainActivity::class.simpleName, "error")
+        Log.e("MainActivity", "error")
     }
 
     private fun navigateToCollectionPage() {

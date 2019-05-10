@@ -13,4 +13,8 @@ interface ProfileRepository {
     suspend fun getCollectionType(): CollectionType
 
     suspend fun getSkills(): CollectionEntity
+
+    suspend fun getProjects(): CollectionEntity
+
+    suspend fun getExperiences(): CollectionEntity
 }

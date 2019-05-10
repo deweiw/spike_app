@@ -7,7 +7,6 @@ import com.dandv.domain.profile.entity.collection.CollectionType
 import com.dandv.domain.profile.repository.ProfileRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 class ProfileRepositoryImpl(private val profileRemoteDataSource: ProfileRemoteDataSource) : ProfileRepository {
 
@@ -30,6 +29,18 @@ class ProfileRepositoryImpl(private val profileRemoteDataSource: ProfileRemoteDa
     override suspend fun getSkills(): CollectionEntity {
         return withContext(Dispatchers.IO) {
             profileRemoteDataSource.getSkills()
+        }
+    }
+
+    override suspend fun getProjects(): CollectionEntity {
+        return withContext(Dispatchers.IO) {
+            profileRemoteDataSource.getProjects()
+        }
+    }
+
+    override suspend fun getExperiences(): CollectionEntity {
+        return withContext(Dispatchers.IO) {
+            profileRemoteDataSource.getExperiences()
         }
     }
 }

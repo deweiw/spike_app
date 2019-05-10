@@ -41,9 +41,9 @@ class HomePageViewModel
         }
     }
 
-    fun requestSkillsCollection(){
+    fun requestCollection(collectionType: CollectionType) {
         coroutineScope.launch {
-            setCollectionTypeUseCase.buildUseCase(CollectionType.SKILLS)
+            setCollectionTypeUseCase.buildUseCase(collectionType)
             pageViewState.postValue(HomePageViewState.Navigation)
         }
     }

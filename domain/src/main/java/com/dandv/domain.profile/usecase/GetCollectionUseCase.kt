@@ -8,15 +8,15 @@ import javax.inject.Inject
 
 class GetCollectionUseCase
 @Inject constructor(
-    private val profileRepository: ProfileRepository,
-    private val getSkillsUseCase: GetSkillsUseCase
+    private val profileRepository: ProfileRepository
 ) : UseCaseEmptyInput<CollectionEntity> {
 
     override suspend fun buildUseCase(): CollectionEntity {
         val collectionType = profileRepository.getCollectionType()
         return when (collectionType) {
-            CollectionType.SKILLS -> getSkillsUseCase.buildUseCase()
-            else -> CollectionEntity.Empty
+            CollectionType.SKILLS -> profileRepository.getSkills()
+            CollectionType.EXPERIENCES -> profileRepository.getExperiences()
+            CollectionType.PROJECTS -> profileRepository.getProjects()
         }
     }
 }

@@ -1,5 +1,5 @@
 package com.dandv.spike.ui.collection.model
 
-data class SkillItemUiModel(
-    val name: String
-)
+import com.dandv.spike.ui.collection.mapper.CollectionItemUiModel
+
+class SkillItemUiModel(val name: String) : CollectionItemUiModel
