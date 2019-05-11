@@ -50,8 +50,8 @@ class MainActivity : DaggerAppCompatActivity() {
 
     }
 
-    override fun onResumeFragments() {
-        super.onResumeFragments()
+    override fun onResume() {
+        super.onResume()
         homePageViewModel.requestProfile()
     }
 

@@ -24,15 +24,18 @@ class ExperienceDataToExperienceItemUiModelMapperTest {
     @Test
     fun `given toBeTransformed data when mapToPresentation called then get expect result`() {
         // given
+        val expectDuration = "result"
+        val expectCompany = "abc"
+        val expectSummary = "summary"
         given(stringBuilder.append(any<String>())).willReturn(stringBuilder)
-        given(stringBuilder.toString()).willReturn("result")
+        given(stringBuilder.toString()).willReturn(expectDuration)
 
         // when
-        val result = cut.mapToPresentation(ExperienceData("abc", "from", "to", "summary"))
+        val result = cut.mapToPresentation(ExperienceData(expectCompany, "from", "to", expectSummary))
 
         // then
-        assertEquals("abc", result.company)
-        assertEquals("result", result.duration)
-        assertEquals("summary", result.summary)
+        assertEquals(expectCompany, result.company)
+        assertEquals(expectDuration, result.duration)
+        assertEquals(expectSummary, result.summary)
     }
 }

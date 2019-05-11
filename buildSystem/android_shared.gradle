@@ -25,5 +25,5 @@ dependencies {
     kapt AndroidArchitectureComponentsDependencies.lifecycleCompiler
 
     // Unit test
-    androidTestImplementation AndroidTestDependencies.values()
+    testImplementation AndroidTestDependencies.values()
 }
