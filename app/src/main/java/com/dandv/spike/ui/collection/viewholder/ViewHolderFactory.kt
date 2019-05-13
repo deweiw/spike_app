@@ -7,6 +7,9 @@ import com.dandv.spike.R
 import com.dandv.spike.ui.collection.mapper.CollectionItemUiModel
 import javax.inject.Inject
 
+/**
+ * The factory function to create specific view holder used by the list view.
+ */
 class ViewHolderFactory @Inject constructor() {
 
     fun create(collectionType: CollectionType, parent: ViewGroup): CollectionItemViewHolder<CollectionItemUiModel> {

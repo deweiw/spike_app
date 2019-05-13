@@ -1,4 +1,4 @@
-package com.dandv.data.profile.mapper
+package com.dandv.data.profile.datasource.remote.mapper
 
 import com.dandv.consultant.domain.common.basemapper.BaseMapperToDomain
 import com.dandv.data.profile.model.ProfileDto

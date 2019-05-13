@@ -62,10 +62,17 @@ ext {
     AndroidArchitectureComponentsDependencies = [
             lifecycleExtensions: "android.arch.lifecycle:extensions:$lifecycle_version",
             lifecycleCompiler  : "android.arch.lifecycle:compiler:$lifecycle_version",
+            roomRuntime        : "android.arch.persistence.room:runtime:$lifecycle_version",
+            roomCompiler       : "android.arch.persistence.room:compiler:$lifecycle_version",
+            roomRxJava         : "android.arch.persistence.room:rxjava2:$lifecycle_version"
     ]
 
     DaggerAndroid = [
             daggerAndroidProcessor: "com.google.dagger:dagger-android-processor:$dagger_version",
             daggerSupport         : "com.google.dagger:dagger-android-support:$dagger_version"
+    ]
+
+    DebugDependencies = [
+            dbDebug: 'com.amitshekhar.android:debug-db:1.0.6'
     ]
 }

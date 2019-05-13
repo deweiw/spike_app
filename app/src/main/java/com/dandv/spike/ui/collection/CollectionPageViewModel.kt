@@ -13,6 +13,13 @@ import com.dandv.spike.ui.collection.model.CollectionPageViewState
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Request collection data to be displayed on the UI.
+ *
+ * Collection data can be three types: Projects, Skills and Experiences.
+ * View Model takes the responsibility to convert the data from the domain entity to the format which needed
+ * by the UI (UiModels).
+ */
 class CollectionPageViewModel
 @Inject constructor(
     private val getCollectionUseCase: GetCollectionUseCase,

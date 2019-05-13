@@ -23,6 +23,9 @@ dependencies {
     //Android architecture components
     implementation AndroidArchitectureComponentsDependencies.lifecycleExtensions
     kapt AndroidArchitectureComponentsDependencies.lifecycleCompiler
+    kapt AndroidArchitectureComponentsDependencies.roomCompiler
+    kapt AndroidArchitectureComponentsDependencies.roomRxJava
+    implementation AndroidArchitectureComponentsDependencies.roomRuntime
 
     // Unit test
     testImplementation AndroidTestDependencies.values()

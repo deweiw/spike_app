@@ -1,6 +1,7 @@
 package com.dandv.data.profile.repository
 
-import com.dandv.data.profile.datasource.ProfileRemoteDataSource
+import com.dandv.data.profile.datasource.local.ProfileLocalDataSource
+import com.dandv.data.profile.datasource.remote.ProfileRemoteDataSource
 import com.dandv.domain.profile.entity.ProfileEntity
 import com.dandv.domain.profile.entity.collection.CollectionEntity
 import com.dandv.domain.profile.entity.collection.CollectionType
@@ -8,17 +9,40 @@ import com.dandv.domain.profile.repository.ProfileRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ProfileRepositoryImpl(private val profileRemoteDataSource: ProfileRemoteDataSource) : ProfileRepository {
+/**
+ * This repository implements repo interface defined in the domain layer.
+ *
+ * Normally use case defines which data it wanted, repo implementation defines where and how to get the data
+ */
+class ProfileRepositoryImpl(
+    private val profileLocalDataSource: ProfileLocalDataSource,
+    private val profileRemoteDataSource: ProfileRemoteDataSource
+) : ProfileRepository {
 
     private lateinit var collectionType: CollectionType
 
+    /** The current logic is: Getting the profile from the local database first, if there is no local database or
+     * any error happened, request the data from the server and save it to the local database.
+     *
+     *  Here is the place to implement the logic of how to interact between local and remote data source,
+     *  for example we can force to refresh the data from the remote by adding a flag and triggered
+     *  by user using pull to refresh function.
+     */
     override suspend fun getProfile(): ProfileEntity {
         return withContext(Dispatchers.IO) {
-            profileRemoteDataSource.getProfile()
+            val profileEntity = profileLocalDataSource.getProfile()
+            when (profileEntity) {
+                is ProfileEntity.Data -> profileEntity
+                else -> {
+                    profileRemoteDataSource.getProfile().also {
+                        profileLocalDataSource.saveProfile(it)
+                    }
+                }
+            }
         }
     }
 
-    override suspend fun setCollecionType(collectionType: CollectionType) {
+    override suspend fun setCollectionType(collectionType: CollectionType) {
         this.collectionType = collectionType
     }
 

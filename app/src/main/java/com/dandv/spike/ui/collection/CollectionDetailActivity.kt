@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import com.dandv.domain.profile.entity.collection.CollectionType
 import com.dandv.spike.R
+import com.dandv.spike.ui.BaseActivity
 import com.dandv.spike.ui.collection.adapter.CollectionPageAdapter
 import com.dandv.spike.ui.collection.adapter.CollectionPageAdapterFactory
 import com.dandv.spike.ui.collection.mapper.CollectionItemUiModel
@@ -16,8 +17,14 @@ import com.dandv.spike.ui.collection.viewholder.ViewHolderFactory
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_collection.*
 import javax.inject.Inject
-
-class CollectionDetailActivity : DaggerAppCompatActivity() {
+/**
+ * From CollectionDetailActivity, user can check details of Skills, Projects and Experiences.
+ * The different type of collections share the same recycler view and adapter
+ * but injected with different view holder corresponding to each type of the collection item object
+ *
+ * Due to the demo purpose, the error handling view is not implemented, only a log created
+ */
+class CollectionDetailActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -29,16 +36,23 @@ class CollectionDetailActivity : DaggerAppCompatActivity() {
     private lateinit var collectionPageViewModel: CollectionPageViewModel
     private lateinit var collectionAdapter: CollectionPageAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_collection)
-        setupViewModel()
+    override fun onResume() {
+        super.onResume()
+        collectionPageViewModel.requestCollectionData()
+    }
 
+    override fun getLayoutResource(): Int {
+        return R.layout.activity_collection
+    }
+
+    override fun setupViewModel() {
+        collectionPageViewModel = ViewModelProviders.of(this, viewModelFactory).get(CollectionPageViewModel::class.java)
+    }
+
+    override fun observeViewModelState() {
         collectionPageViewModel.getCollectionPageViewState().observe(this, Observer {
             onPageStateChanged(it)
         })
-
-        collectionPageViewModel.requestCollectionData()
     }
 
     private fun onPageStateChanged(collectionPageViewState: CollectionPageViewState?) {
@@ -72,9 +86,5 @@ class CollectionDetailActivity : DaggerAppCompatActivity() {
 
     private fun handleLoadingView() {
         progress_bar.visibility = View.VISIBLE
-    }
-
-    private fun setupViewModel() {
-        collectionPageViewModel = ViewModelProviders.of(this, viewModelFactory).get(CollectionPageViewModel::class.java)
     }
 }

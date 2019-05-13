@@ -1,10 +1,11 @@
 package com.dandv.data.profile.datasource
 
 import com.dandv.data.common.NetworkClient
-import com.dandv.data.profile.mapper.ProfileDtoToProfileEntityMapper
-import com.dandv.data.profile.mapper.collection.ExperienceDtoToExperienceDataMapper
-import com.dandv.data.profile.mapper.collection.ProjectDtoToProjectDataMapper
-import com.dandv.data.profile.mapper.collection.SkillDtoToSkillDataMapper
+import com.dandv.data.profile.datasource.remote.ProfileRemoteDataSource
+import com.dandv.data.profile.datasource.remote.mapper.ProfileDtoToProfileEntityMapper
+import com.dandv.data.profile.datasource.remote.mapper.collection.ExperienceDtoToExperienceDataMapper
+import com.dandv.data.profile.datasource.remote.mapper.collection.ProjectDtoToProjectDataMapper
+import com.dandv.data.profile.datasource.remote.mapper.collection.SkillDtoToSkillDataMapper
 import com.dandv.data.profile.model.ProfileDto
 import com.dandv.domain.profile.entity.ProfileEntity
 import com.nhaarman.mockito_kotlin.*

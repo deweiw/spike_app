@@ -9,7 +9,7 @@ class SetCollectionTypeUseCase
 @Inject constructor(private val profileRepository: ProfileRepository) : UseCase<Boolean, CollectionType> {
 
     override suspend fun buildUseCase(params: CollectionType): Boolean {
-        profileRepository.setCollecionType(params)
+        profileRepository.setCollectionType(params)
         return true
     }
 }

@@ -1,14 +1,17 @@
-package com.dandv.data.profile.datasource
+package com.dandv.data.profile.datasource.remote
 
 import com.dandv.data.common.NetworkClient
-import com.dandv.data.profile.mapper.ProfileDtoToProfileEntityMapper
-import com.dandv.data.profile.mapper.collection.ExperienceDtoToExperienceDataMapper
-import com.dandv.data.profile.mapper.collection.ProjectDtoToProjectDataMapper
-import com.dandv.data.profile.mapper.collection.SkillDtoToSkillDataMapper
+import com.dandv.data.profile.datasource.remote.mapper.ProfileDtoToProfileEntityMapper
+import com.dandv.data.profile.datasource.remote.mapper.collection.ExperienceDtoToExperienceDataMapper
+import com.dandv.data.profile.datasource.remote.mapper.collection.ProjectDtoToProjectDataMapper
+import com.dandv.data.profile.datasource.remote.mapper.collection.SkillDtoToSkillDataMapper
 import com.dandv.domain.profile.entity.ProfileEntity
 import com.dandv.domain.profile.entity.collection.CollectionEntity
 import javax.inject.Inject
 
+/**
+ * Using Retrofit to request remote data here.
+ */
 class ProfileRemoteDataSource
 @Inject constructor(
     private val networkClient: NetworkClient,

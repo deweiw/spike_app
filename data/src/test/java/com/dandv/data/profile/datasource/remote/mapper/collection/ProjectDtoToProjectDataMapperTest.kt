@@ -1,4 +1,4 @@
-package com.dandv.data.profile.mapper.collection
+package com.dandv.data.profile.datasource.remote.mapper.collection
 
 import com.dandv.data.profile.model.ProjectDto
 import org.junit.Before

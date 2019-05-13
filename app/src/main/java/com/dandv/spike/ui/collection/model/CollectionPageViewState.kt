@@ -1,5 +1,8 @@
 package com.dandv.spike.ui.collection.model
 
+/**
+ * Collection page state. UI based on the state to update the UI
+ */
 sealed class CollectionPageViewState {
     object Loading : CollectionPageViewState()
     object Error : CollectionPageViewState()

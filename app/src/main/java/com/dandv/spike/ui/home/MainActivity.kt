@@ -10,15 +10,22 @@ import android.view.View
 import com.dandv.domain.profile.entity.collection.CollectionType
 import com.dandv.spike.R
 import com.dandv.spike.common.toVisibility
+import com.dandv.spike.ui.BaseActivity
 import com.dandv.spike.ui.collection.CollectionDetailActivity
 import com.dandv.spike.ui.home.model.HomePageUiModel
 import com.dandv.spike.ui.home.model.HomePageViewState
 import com.squareup.picasso.Picasso
-import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-class MainActivity : DaggerAppCompatActivity() {
+/**
+ * Main activity is the home activity, which shows Profile information.
+ * When launch the main activity, request profile data, show it if the data comes back successfully. If profile contains
+ * available skills, projects or experiences. User is able to click it and open the detail list page.
+ *
+ * Due to the demo purpose, the error handling view is not implemented, only a log created
+ */
+class MainActivity : BaseActivity(), View.OnClickListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -29,30 +36,34 @@ class MainActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setupViewModel()
-
-        homePageViewModel.getPageViewState().observe(this, Observer {
-            onPageStateChanged(it)
-        })
-
-        skills_layout.setOnClickListener {
-            homePageViewModel.requestCollection(CollectionType.SKILLS)
-        }
-
-        project_layout.setOnClickListener {
-            homePageViewModel.requestCollection(CollectionType.PROJECTS)
-        }
-
-        experience_layout.setOnClickListener {
-            homePageViewModel.requestCollection(CollectionType.EXPERIENCES)
-        }
-
+        initializeViews()
     }
 
     override fun onResume() {
         super.onResume()
         homePageViewModel.requestProfile()
+    }
+
+    override fun onClick(v: View) {
+        when (v) {
+            skills_layout -> homePageViewModel.requestCollection(CollectionType.SKILLS)
+            project_layout -> homePageViewModel.requestCollection(CollectionType.PROJECTS)
+            experience_layout -> homePageViewModel.requestCollection(CollectionType.EXPERIENCES)
+        }
+    }
+
+    override fun getLayoutResource(): Int {
+        return R.layout.activity_main
+    }
+
+    override fun setupViewModel() {
+        homePageViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomePageViewModel::class.java)
+    }
+
+    override fun observeViewModelState() {
+        homePageViewModel.getPageViewState().observe(this, Observer {
+            onPageStateChanged(it)
+        })
     }
 
     private fun onPageStateChanged(homePageViewState: HomePageViewState?) {
@@ -64,6 +75,12 @@ class MainActivity : DaggerAppCompatActivity() {
                 HomePageViewState.Navigation -> navigateToCollectionPage()
             }
         }
+    }
+
+    private fun initializeViews() {
+        skills_layout.setOnClickListener(this)
+        project_layout.setOnClickListener(this)
+        experience_layout.setOnClickListener(this)
     }
 
     private fun handleErrorView() {
@@ -94,9 +111,5 @@ class MainActivity : DaggerAppCompatActivity() {
             experience_layout.visibility = anyExperience.toVisibility()
             project_layout.visibility = anyProjects.toVisibility()
         }
-    }
-
-    private fun setupViewModel() {
-        homePageViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomePageViewModel::class.java)
     }
 }
