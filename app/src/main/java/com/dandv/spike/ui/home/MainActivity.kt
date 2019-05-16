@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.support.annotation.VisibleForTesting
 import android.util.Log
 import android.view.View
 import com.dandv.domain.profile.entity.collection.CollectionType
@@ -32,7 +33,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     @Inject
     lateinit var picasso: Picasso
 
-    private lateinit var homePageViewModel: HomePageViewModel
+    @VisibleForTesting
+    internal lateinit var homePageViewModel: HomePageViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

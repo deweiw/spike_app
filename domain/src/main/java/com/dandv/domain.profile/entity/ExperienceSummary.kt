@@ -1,6 +1,6 @@
 package com.dandv.domain.profile.entity
 
-class ExperienceSummary(
+data class ExperienceSummary(
     val company: String,
     val from: String,
     val to: String,

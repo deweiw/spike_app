@@ -29,4 +29,5 @@ dependencies {
 
     // Unit test
     testImplementation AndroidTestDependencies.values()
+    kaptTest ApplicationAnnotationDependencies.daggerCompiler
 }
