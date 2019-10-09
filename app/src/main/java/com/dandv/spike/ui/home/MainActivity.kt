@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.annotation.VisibleForTesting
 import android.util.Log
@@ -15,7 +16,6 @@ import com.dandv.spike.ui.BaseActivity
 import com.dandv.spike.ui.collection.CollectionDetailActivity
 import com.dandv.spike.ui.home.model.HomePageUiModel
 import com.dandv.spike.ui.home.model.HomePageViewState
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -30,8 +30,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject
-    lateinit var picasso: Picasso
 
     @VisibleForTesting
     internal lateinit var homePageViewModel: HomePageViewModel
@@ -75,8 +73,20 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                 is HomePageViewState.Success -> handleContentView(it.homePageUiModel)
                 HomePageViewState.Error -> handleErrorView()
                 HomePageViewState.Navigation -> navigateToCollectionPage()
+                HomePageViewState.ImageLoadedFailed -> handleErrorImage()
+                is HomePageViewState.ImageLoadedSuccess -> handleImageLoaded(it.bitmap)
             }
         }
+    }
+
+    private fun handleImageLoaded(bitmap: Bitmap?) {
+        bitmap?.let {
+            profile_image.setImageBitmap(it)
+        }
+    }
+
+    private fun handleErrorImage() {
+        // handle image loading failed event
     }
 
     private fun initializeViews() {
@@ -104,7 +114,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         progress_bar.visibility = View.GONE
         content_layout.visibility = View.VISIBLE
         with(homePageUiModel) {
-            picasso.load(imageUrl).placeholder(R.drawable.profile_placeholder).into(profile_image)
             candidate_name.text = name
             candidate_phone.text = phone
             candidate_email.text = email
@@ -112,6 +121,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             skills_layout.visibility = anySkill.toVisibility()
             experience_layout.visibility = anyExperience.toVisibility()
             project_layout.visibility = anyProjects.toVisibility()
+            homePageViewModel.requestHomeImage(imageUrl, R.drawable.profile_placeholder)
         }
     }
 }

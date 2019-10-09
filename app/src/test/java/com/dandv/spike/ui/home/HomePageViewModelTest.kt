@@ -46,7 +46,8 @@ class HomePageViewModelTest {
             getProfileUseCase,
             setCollectionTypeUseCase,
             profileDataToHomePageUiModelMapper,
-            CoroutineScopeTestFactory()
+            CoroutineScopeTestFactory(),
+
         )
         cut.getPageViewState().observeForever(pageViewStateObserver)
     }
