@@ -14,7 +14,10 @@ class CollectionPageAdapter(
 
     private val collectionUiModel = mutableListOf<CollectionItemUiModel>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectionItemViewHolder<CollectionItemUiModel> {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): CollectionItemViewHolder<CollectionItemUiModel> {
         return viewHolderFactory.create(collectionType, parent)
     }
 
@@ -22,7 +25,10 @@ class CollectionPageAdapter(
         return collectionUiModel.size
     }
 
-    override fun onBindViewHolder(holder: CollectionItemViewHolder<CollectionItemUiModel>, position: Int) {
+    override fun onBindViewHolder(
+        holder: CollectionItemViewHolder<CollectionItemUiModel>,
+        position: Int
+    ) {
         holder.onBind(collectionUiModel[position])
     }
 

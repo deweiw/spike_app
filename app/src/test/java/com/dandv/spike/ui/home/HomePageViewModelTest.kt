@@ -30,11 +30,13 @@ class HomePageViewModelTest {
 
     @Mock
     private lateinit var getProfileUseCase: GetProfileUseCase
+
     @Mock
     private lateinit var setCollectionTypeUseCase: SetCollectionTypeUseCase
+
     @Mock
     private lateinit var profileDataToHomePageUiModelMapper: ProfileDataToHomePageUiModelMapper
-    @Mock
+
     private lateinit var pageViewStateObserver: Observer<HomePageViewState>
 
     private lateinit var cut: HomePageViewModel
@@ -94,7 +96,9 @@ class HomePageViewModelTest {
             val profileData = mock<ProfileData>()
             given(getProfileUseCase.buildUseCase()).willReturn(ProfileEntity.Data(profileData))
             val homePageUiModel = mock<HomePageUiModel>()
-            given(profileDataToHomePageUiModelMapper.mapToPresentation(profileData)).willReturn(homePageUiModel)
+            given(profileDataToHomePageUiModelMapper.mapToPresentation(profileData)).willReturn(
+                homePageUiModel
+            )
 
             // when
             cut.requestProfile()

@@ -11,7 +11,6 @@ import com.dandv.spike.ui.collection.mapper.ProjectDataToProjectItemUiModelMappe
 import com.dandv.spike.ui.collection.mapper.SkillDataToSkillItemUiModelMapper
 import com.dandv.spike.ui.collection.model.CollectionPageViewState
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Request collection data to be displayed on the UI.
@@ -21,7 +20,7 @@ import javax.inject.Inject
  * by the UI (UiModels).
  */
 class CollectionPageViewModel
-@Inject constructor(
+constructor(
     private val getCollectionUseCase: GetCollectionUseCase,
     private val skillDataToSkillItemUiModelMapper: SkillDataToSkillItemUiModelMapper,
     private val projectDataToProjectItemUiModelMapper: ProjectDataToProjectItemUiModelMapper,

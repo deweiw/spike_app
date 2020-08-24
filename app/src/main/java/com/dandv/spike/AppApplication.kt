@@ -1,16 +1,16 @@
 package com.dandv.spike
 
-import android.app.Activity
 import android.app.Application
-import com.dandv.spike.di.component.DaggerAppBaseComponent
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
-import javax.inject.Inject
+import com.dandv.data.di.clientModule
+import com.dandv.data.di.repositoryModule
+import com.dandv.di.useCaseModule
+import com.dandv.spike.di.module.toolsModule
+import com.dandv.spike.di.module.viewModelModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.KoinComponent
+import org.koin.core.context.startKoin
 
-class AppApplication : Application(), HasActivityInjector {
-
-    @Inject
-    lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
+class AppApplication : Application(), KoinComponent {
 
     override fun onCreate() {
         super.onCreate()
@@ -18,13 +18,13 @@ class AppApplication : Application(), HasActivityInjector {
     }
 
     private fun initComponent() {
-        return DaggerAppBaseComponent.builder()
-            .application(this)
-            .build().inject(this)
-
-    }
-
-    override fun activityInjector(): DispatchingAndroidInjector<Activity> {
-        return activityDispatchingAndroidInjector
+        startKoin {
+            androidContext(this@AppApplication)
+            modules(
+                listOf(
+                    toolsModule, viewModelModule, clientModule, repositoryModule, useCaseModule
+                )
+            )
+        }
     }
 }

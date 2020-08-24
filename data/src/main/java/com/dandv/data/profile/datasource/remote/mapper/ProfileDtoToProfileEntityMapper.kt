@@ -3,9 +3,8 @@ package com.dandv.data.profile.datasource.remote.mapper
 import com.dandv.consultant.domain.common.basemapper.BaseMapperToDomain
 import com.dandv.data.profile.model.ProfileDto
 import com.dandv.domain.profile.entity.*
-import javax.inject.Inject
 
-class ProfileDtoToProfileEntityMapper @Inject constructor() : BaseMapperToDomain<ProfileDto, ProfileEntity> {
+class ProfileDtoToProfileEntityMapper : BaseMapperToDomain<ProfileDto, ProfileEntity> {
 
     override fun mapToDomain(toBeTransformed: ProfileDto): ProfileEntity {
         return with(toBeTransformed) {

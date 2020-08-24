@@ -14,6 +14,7 @@ class ProfileRepositoryImplTest {
 
     @Mock
     private lateinit var profileLocalDataSource: ProfileLocalDataSource
+
     @Mock
     private lateinit var profileRemoteDataSource: ProfileRemoteDataSource
     private lateinit var cut: ProfileRepositoryImpl

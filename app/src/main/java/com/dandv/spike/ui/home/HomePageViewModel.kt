@@ -11,10 +11,9 @@ import com.dandv.spike.common.CoroutineScopeFactory
 import com.dandv.spike.ui.home.mapper.ProfileDataToHomePageUiModelMapper
 import com.dandv.spike.ui.home.model.HomePageViewState
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class HomePageViewModel
-@Inject constructor(
+constructor(
     private val getProfileUseCase: GetProfileUseCase,
     private val setCollectionTypeUseCase: SetCollectionTypeUseCase,
     private val profileDataToHomePageUiModelMapper: ProfileDataToHomePageUiModelMapper,
@@ -28,8 +27,7 @@ class HomePageViewModel
     fun requestProfile() {
         pageViewState.postValue(HomePageViewState.Loading)
         coroutineScope.launch {
-            val profile = getProfileUseCase.buildUseCase()
-            when (profile) {
+            when (val profile = getProfileUseCase.buildUseCase()) {
                 is ProfileEntity.Data -> pageViewState.postValue(
                     HomePageViewState.Success(
                         profileDataToHomePageUiModelMapper.mapToPresentation(profile.profileData)

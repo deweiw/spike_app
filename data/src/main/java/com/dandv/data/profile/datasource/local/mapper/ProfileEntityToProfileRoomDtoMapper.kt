@@ -4,10 +4,10 @@ import com.dandv.consultant.domain.common.basemapper.BaseMapperToData
 import com.dandv.data.profile.model.ProfileRoomDto
 import com.dandv.domain.profile.entity.ProfileData
 import com.google.gson.Gson
-import javax.inject.Inject
 
-class ProfileEntityToProfileRoomDtoMapper
-@Inject constructor(private val gson: Gson) : BaseMapperToData<ProfileData, ProfileRoomDto> {
+class ProfileEntityToProfileRoomDtoMapper constructor(
+    private val gson: Gson
+) : BaseMapperToData<ProfileData, ProfileRoomDto> {
 
     override fun mapToData(toBeTransformed: ProfileData): ProfileRoomDto {
         return with(toBeTransformed) {

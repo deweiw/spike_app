@@ -22,12 +22,16 @@ class ProfileRemoteDataSourceTest {
 
     @Mock
     private lateinit var networkClient: NetworkClient
+
     @Mock
     private lateinit var profileDtoToProfileEntityMapper: ProfileDtoToProfileEntityMapper
+
     @Mock
     private lateinit var skillDtoToSkillDataMapper: SkillDtoToSkillDataMapper
+
     @Mock
     private lateinit var projectDtoToProjectDataMapper: ProjectDtoToProjectDataMapper
+
     @Mock
     private lateinit var experienceDtoToExperienceDataMapper: ExperienceDtoToExperienceDataMapper
     private lateinit var cut: ProfileRemoteDataSource

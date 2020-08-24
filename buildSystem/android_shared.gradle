@@ -11,15 +11,6 @@ dependencies {
     implementation ApplicationImplementationDependencies.values()
     implementation AndroidDependencies.values()
 
-    annotationProcessor(ApplicationAnnotationDependencies.daggerCompiler) {
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-    }
-
-    //Dagger Android
-    annotationProcessor DaggerAndroid.daggerAndroidProcessor
-    implementation DaggerAndroid.daggerSupport
-    kapt DaggerAndroid.daggerAndroidProcessor
-
     //Android architecture components
     implementation AndroidArchitectureComponentsDependencies.lifecycleExtensions
     kapt AndroidArchitectureComponentsDependencies.lifecycleCompiler
@@ -29,5 +20,4 @@ dependencies {
 
     // Unit test
     testImplementation AndroidTestDependencies.values()
-    kaptTest ApplicationAnnotationDependencies.daggerCompiler
 }

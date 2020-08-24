@@ -16,8 +16,10 @@ class ProfileLocalDataSourceTest {
 
     @Mock
     private lateinit var profileDao: ProfileDao
+
     @Mock
     private lateinit var profileRoomDtoToProfileEntityMapper: ProfileRoomDtoToProfileEntityMapper
+
     @Mock
     private lateinit var profileEntityToProfileRoomDtoMapper: ProfileEntityToProfileRoomDtoMapper
     private lateinit var cut: ProfileLocalDataSource
@@ -26,7 +28,11 @@ class ProfileLocalDataSourceTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         cut =
-            ProfileLocalDataSource(profileDao, profileRoomDtoToProfileEntityMapper, profileEntityToProfileRoomDtoMapper)
+            ProfileLocalDataSource(
+                profileDao,
+                profileRoomDtoToProfileEntityMapper,
+                profileEntityToProfileRoomDtoMapper
+            )
     }
 
     @Test
@@ -35,7 +41,9 @@ class ProfileLocalDataSourceTest {
         val profileRoomDto = mock<ProfileRoomDto>()
         given(profileDao.getProfile()).willReturn(profileRoomDto)
         val profileEntity = mock<ProfileEntity.Data>()
-        given(profileRoomDtoToProfileEntityMapper.mapToDomain(profileRoomDto)).willReturn(profileEntity)
+        given(profileRoomDtoToProfileEntityMapper.mapToDomain(profileRoomDto)).willReturn(
+            profileEntity
+        )
 
         // when
         val result = cut.getProfile()

@@ -1,5 +1,7 @@
 package com.dandv.spike.ui.home
 
+import android.arch.core.executor.testing.InstantTaskExecutorRule
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.view.View
 import android.widget.TextView
@@ -10,16 +12,23 @@ import com.dandv.spike.common.AndroidTest
 import com.dandv.spike.ui.collection.CollectionDetailActivity
 import com.dandv.spike.ui.home.model.HomePageUiModel
 import com.dandv.spike.ui.home.model.HomePageViewState
-import com.nhaarman.mockito_kotlin.argumentCaptor
-import com.nhaarman.mockito_kotlin.eq
-import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.*
+import com.squareup.picasso.Picasso
+import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestRule
 import org.junit.runner.RunWith
+import org.koin.core.context.KoinContextHandler
+import org.koin.core.context.stopKoin
+import org.koin.dsl.module
+import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.robolectric.Robolectric
 import org.robolectric.Robolectric.buildActivity
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment.application
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import kotlin.test.assertEquals
@@ -33,11 +42,34 @@ import kotlin.test.assertEquals
 )
 class MainActivityTest {
 
+    @get:Rule
+    val testRule: TestRule = InstantTaskExecutorRule()
+
+    @Mock
+    private lateinit var homePageViewModel: HomePageViewModel
+
+    private lateinit var picasso: Picasso
+
+    @Mock
+    private lateinit var pageViewState: LiveData<HomePageViewState>
+    private val modules = module {
+        single(override = true) { homePageViewModel }
+        single(override = true) { picasso }
+    }
     private lateinit var cut: MainActivity
+
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
+        KoinContextHandler.get().loadModules(listOf(modules))
+        given(homePageViewModel.getPageViewState()).willReturn(pageViewState)
         cut = Robolectric.setupActivity(MainActivity::class.java)
+        picasso = Picasso.Builder(application).build()
+    }
+
+    @After
+    fun tearDown() {
+        stopKoin()
     }
 
     @Test
@@ -49,7 +81,7 @@ class MainActivityTest {
         controller.resume()
 
         // then
-        verify(cut.homePageViewModel).requestProfile()
+        verify(cut.homePageViewModel, atLeastOnce()).requestProfile()
     }
 
     @Test

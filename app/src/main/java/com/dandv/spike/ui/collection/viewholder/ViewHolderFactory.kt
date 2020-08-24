@@ -5,14 +5,16 @@ import android.view.ViewGroup
 import com.dandv.domain.profile.entity.collection.CollectionType
 import com.dandv.spike.R
 import com.dandv.spike.ui.collection.mapper.CollectionItemUiModel
-import javax.inject.Inject
 
 /**
  * The factory function to create specific view holder used by the list view.
  */
-class ViewHolderFactory @Inject constructor() {
+class ViewHolderFactory {
 
-    fun create(collectionType: CollectionType, parent: ViewGroup): CollectionItemViewHolder<CollectionItemUiModel> {
+    fun create(
+        collectionType: CollectionType,
+        parent: ViewGroup
+    ): CollectionItemViewHolder<CollectionItemUiModel> {
         return when (collectionType) {
             CollectionType.SKILLS -> SkillItemViewHolder(
                 LayoutInflater.from(parent.context).inflate(

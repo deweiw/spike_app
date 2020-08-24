@@ -10,7 +10,11 @@ class ExperienceDataToExperienceItemUiModelMapper(private val stringBuilder: Str
     override fun mapToPresentation(toBeTransformed: ExperienceData): ExperienceItemUiModel {
         stringBuilder.clear()
         return with(toBeTransformed) {
-            ExperienceItemUiModel(company, stringBuilder.append(from).append(" - ").append(to).toString(), summary)
+            ExperienceItemUiModel(
+                company,
+                stringBuilder.append(from).append(" - ").append(to).toString(),
+                summary
+            )
         }
     }
 }

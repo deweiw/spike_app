@@ -3,14 +3,12 @@ package com.dandv.data.profile.datasource.local
 import com.dandv.data.profile.datasource.local.mapper.ProfileEntityToProfileRoomDtoMapper
 import com.dandv.data.profile.datasource.local.mapper.ProfileRoomDtoToProfileEntityMapper
 import com.dandv.domain.profile.entity.ProfileEntity
-import javax.inject.Inject
 
 /**
  * For demo purpose, only profile data saved into the local database. If we want to save other information into the local database,
  * we can create other tables and do the similar jobs as the one implemented here
  */
-class ProfileLocalDataSource
-@Inject constructor(
+class ProfileLocalDataSource constructor(
     private val profileDao: ProfileDao,
     private val profileRoomDtoToProfileEntityMapper: ProfileRoomDtoToProfileEntityMapper,
     private val profileEntityToProfileRoomDtoMapper: ProfileEntityToProfileRoomDtoMapper

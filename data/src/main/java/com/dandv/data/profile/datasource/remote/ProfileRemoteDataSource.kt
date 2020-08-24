@@ -7,13 +7,12 @@ import com.dandv.data.profile.datasource.remote.mapper.collection.ProjectDtoToPr
 import com.dandv.data.profile.datasource.remote.mapper.collection.SkillDtoToSkillDataMapper
 import com.dandv.domain.profile.entity.ProfileEntity
 import com.dandv.domain.profile.entity.collection.CollectionEntity
-import javax.inject.Inject
 
 /**
  * Using Retrofit to request remote data here.
  */
 class ProfileRemoteDataSource
-@Inject constructor(
+constructor(
     private val networkClient: NetworkClient,
     private val profileDtoToProfileEntityMapper: ProfileDtoToProfileEntityMapper,
     private val skillDtoToSkillDataMapper: SkillDtoToSkillDataMapper,
@@ -24,7 +23,8 @@ class ProfileRemoteDataSource
         return try {
             val response = networkClient.getProfile().execute()
             when (response.isSuccessful) {
-                true -> response.body()?.let { profileDtoToProfileEntityMapper.mapToDomain(it) } ?: ProfileEntity.Empty
+                true -> response.body()?.let { profileDtoToProfileEntityMapper.mapToDomain(it) }
+                    ?: ProfileEntity.Empty
                 else -> ProfileEntity.Error
             }
         } catch (error: Exception) {

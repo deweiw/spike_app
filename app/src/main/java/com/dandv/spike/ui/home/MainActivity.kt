@@ -1,8 +1,6 @@
 package com.dandv.spike.ui.home
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.VisibleForTesting
@@ -17,7 +15,7 @@ import com.dandv.spike.ui.home.model.HomePageUiModel
 import com.dandv.spike.ui.home.model.HomePageViewState
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 /**
  * Main activity is the home activity, which shows Profile information.
@@ -28,13 +26,10 @@ import javax.inject.Inject
  */
 class MainActivity : BaseActivity(), View.OnClickListener {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject
-    lateinit var picasso: Picasso
+    private val picasso by inject<Picasso>()
 
     @VisibleForTesting
-    internal lateinit var homePageViewModel: HomePageViewModel
+    val homePageViewModel by inject<HomePageViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,10 +51,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     override fun getLayoutResource(): Int {
         return R.layout.activity_main
-    }
-
-    override fun setupViewModel() {
-        homePageViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomePageViewModel::class.java)
     }
 
     override fun observeViewModelState() {

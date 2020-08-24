@@ -34,12 +34,16 @@ class CollectionPageViewModelTest {
 
     @Mock
     private lateinit var getCollectionUseCase: GetCollectionUseCase
+
     @Mock
     private lateinit var skillDataToSkillItemUiModelMapper: SkillDataToSkillItemUiModelMapper
+
     @Mock
     private lateinit var projectDataToProjectItemUiModelMapper: ProjectDataToProjectItemUiModelMapper
+
     @Mock
     private lateinit var experienceDataToExperienceItemUiModelMapper: ExperienceDataToExperienceItemUiModelMapper
+
     @Mock
     private lateinit var collectionPageViewState: Observer<CollectionPageViewState>
 
@@ -98,9 +102,15 @@ class CollectionPageViewModelTest {
             // given
             val skillData = mock<SkillData>()
             val skills = listOf(skillData)
-            given(getCollectionUseCase.buildUseCase()).willReturn(CollectionEntity.SkillCollection(skills))
+            given(getCollectionUseCase.buildUseCase()).willReturn(
+                CollectionEntity.SkillCollection(
+                    skills
+                )
+            )
             val skillItemUiModel = mock<SkillItemUiModel>()
-            given(skillDataToSkillItemUiModelMapper.mapToPresentation(skillData)).willReturn(skillItemUiModel)
+            given(skillDataToSkillItemUiModelMapper.mapToPresentation(skillData)).willReturn(
+                skillItemUiModel
+            )
 
             // when
             cut.requestCollectionData()
@@ -123,9 +133,15 @@ class CollectionPageViewModelTest {
             // given
             val projectData = mock<ProjectData>()
             val projects = listOf(projectData)
-            given(getCollectionUseCase.buildUseCase()).willReturn(CollectionEntity.ProjectCollection(projects))
+            given(getCollectionUseCase.buildUseCase()).willReturn(
+                CollectionEntity.ProjectCollection(
+                    projects
+                )
+            )
             val projectItemUiModel = mock<ProjectItemUiModel>()
-            given(projectDataToProjectItemUiModelMapper.mapToPresentation(projectData)).willReturn(projectItemUiModel)
+            given(projectDataToProjectItemUiModelMapper.mapToPresentation(projectData)).willReturn(
+                projectItemUiModel
+            )
 
             // when
             cut.requestCollectionData()
@@ -148,7 +164,11 @@ class CollectionPageViewModelTest {
             // given
             val experienceData = mock<ExperienceData>()
             val experiences = listOf(experienceData)
-            given(getCollectionUseCase.buildUseCase()).willReturn(CollectionEntity.ExperienceCollection(experiences))
+            given(getCollectionUseCase.buildUseCase()).willReturn(
+                CollectionEntity.ExperienceCollection(
+                    experiences
+                )
+            )
             val experienceItemUiModel = mock<ExperienceItemUiModel>()
             given(experienceDataToExperienceItemUiModelMapper.mapToPresentation(experienceData)).willReturn(
                 experienceItemUiModel
