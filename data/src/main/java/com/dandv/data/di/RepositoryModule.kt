@@ -1,7 +1,7 @@
 package com.dandv.data.di
 
 import android.app.Application
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import com.dandv.data.common.AppDatabase
 import com.dandv.data.profile.datasource.remote.ProfileRemoteDataSource
 import com.dandv.data.profile.datasource.local.ProfileDao

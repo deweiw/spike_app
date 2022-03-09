@@ -3,7 +3,6 @@ package com.dandv.spike.ui.collection
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.dandv.domain.profile.entity.collection.CollectionType
@@ -14,9 +13,9 @@ import com.dandv.spike.ui.collection.adapter.CollectionPageAdapterFactory
 import com.dandv.spike.ui.collection.mapper.CollectionItemUiModel
 import com.dandv.spike.ui.collection.model.CollectionPageViewState
 import com.dandv.spike.ui.collection.viewholder.ViewHolderFactory
-import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_collection.*
 import javax.inject.Inject
+
 /**
  * From CollectionDetailActivity, user can check details of Skills, Projects and Experiences.
  * The different type of collections share the same recycler view and adapter
@@ -28,8 +27,10 @@ class CollectionDetailActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var collectionPageAdapterFactory: CollectionPageAdapterFactory
+
     @Inject
     lateinit var viewHolderFactory: ViewHolderFactory
 
@@ -46,7 +47,8 @@ class CollectionDetailActivity : BaseActivity() {
     }
 
     override fun setupViewModel() {
-        collectionPageViewModel = ViewModelProviders.of(this, viewModelFactory).get(CollectionPageViewModel::class.java)
+        collectionPageViewModel =
+            ViewModelProviders.of(this, viewModelFactory).get(CollectionPageViewModel::class.java)
     }
 
     override fun observeViewModelState() {
@@ -60,21 +62,31 @@ class CollectionDetailActivity : BaseActivity() {
             when (it) {
                 CollectionPageViewState.Loading -> handleLoadingView()
                 CollectionPageViewState.Error -> handleErrorView()
-                is CollectionPageViewState.Skills -> handleCollectionView(it.skills, CollectionType.SKILLS)
+                is CollectionPageViewState.Skills -> handleCollectionView(
+                    it.skills,
+                    CollectionType.SKILLS
+                )
                 is CollectionPageViewState.Experiences -> handleCollectionView(
                     it.experiences,
                     CollectionType.EXPERIENCES
                 )
-                is CollectionPageViewState.Projects -> handleCollectionView(it.projects, CollectionType.PROJECTS)
+                is CollectionPageViewState.Projects -> handleCollectionView(
+                    it.projects,
+                    CollectionType.PROJECTS
+                )
             }
         }
     }
 
-    private fun handleCollectionView(list: List<CollectionItemUiModel>, collectionType: CollectionType) {
+    private fun handleCollectionView(
+        list: List<CollectionItemUiModel>,
+        collectionType: CollectionType
+    ) {
         progress_bar.visibility = View.GONE
         collection_list.visibility = View.VISIBLE
         collection_list.adapter =
-            collectionPageAdapterFactory.create(collectionType, viewHolderFactory).also { collectionAdapter = it }
+            collectionPageAdapterFactory.create(collectionType, viewHolderFactory)
+                .also { collectionAdapter = it }
         collectionAdapter.updateAdapter(list)
     }
 
