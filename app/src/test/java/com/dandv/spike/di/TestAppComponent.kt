@@ -2,8 +2,6 @@ package com.dandv.spike.di
 
 import android.app.Application
 import com.dandv.spike.common.AndroidTest
-import com.dandv.spike.di.component.AppBaseComponent
-import com.dandv.spike.di.module.ui.ActivityBuilderModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule

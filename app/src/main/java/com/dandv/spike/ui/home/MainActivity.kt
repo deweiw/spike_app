@@ -1,13 +1,13 @@
 package com.dandv.spike.ui.home
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.VisibleForTesting
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
+import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.dandv.domain.profile.entity.collection.CollectionType
 import com.dandv.spike.R
 import com.dandv.spike.common.toVisibility
@@ -16,6 +16,7 @@ import com.dandv.spike.ui.collection.CollectionDetailActivity
 import com.dandv.spike.ui.home.model.HomePageUiModel
 import com.dandv.spike.ui.home.model.HomePageViewState
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -26,15 +27,17 @@ import javax.inject.Inject
  *
  * Due to the demo purpose, the error handling view is not implemented, only a log created
  */
+@AndroidEntryPoint
 class MainActivity : BaseActivity(), View.OnClickListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var picasso: Picasso
 
     @VisibleForTesting
-    internal lateinit var homePageViewModel: HomePageViewModel
+    internal val homePageViewModel: HomePageViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,10 +59,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     override fun getLayoutResource(): Int {
         return R.layout.activity_main
-    }
-
-    override fun setupViewModel() {
-        homePageViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomePageViewModel::class.java)
     }
 
     override fun observeViewModelState() {

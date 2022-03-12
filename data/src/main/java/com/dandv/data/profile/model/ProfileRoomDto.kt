@@ -1,6 +1,6 @@
 package com.dandv.data.profile.model
 
-import android.support.annotation.NonNull
+import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey

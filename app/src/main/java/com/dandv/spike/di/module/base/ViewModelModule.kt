@@ -1,14 +1,17 @@
 package com.dandv.spike.di.module.base
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.dandv.spike.ViewModelFactory
 import com.dandv.spike.ui.collection.CollectionPageViewModel
 import com.dandv.spike.ui.home.HomePageViewModel
 import dagger.Binds
 import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.multibindings.IntoMap
 
+@InstallIn(ViewModelComponent::class)
 @Module
 abstract class ViewModelModule {
 

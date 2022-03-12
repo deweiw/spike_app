@@ -1,7 +1,7 @@
 package com.dandv.spike.ui.collection
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.dandv.domain.profile.entity.collection.CollectionEntity
 import com.dandv.domain.profile.usecase.GetCollectionUseCase
 import com.dandv.spike.common.BaseViewModel
@@ -36,8 +36,7 @@ class CollectionPageViewModel
     fun requestCollectionData() {
         collectionPageViewState.postValue(CollectionPageViewState.Loading)
         coroutineScope.launch {
-            val result = getCollectionUseCase.buildUseCase()
-            when (result) {
+            when (val result = getCollectionUseCase.buildUseCase()) {
                 is CollectionEntity.SkillCollection -> collectionPageViewState.postValue(
                     CollectionPageViewState.Skills(result.skills.map {
                         skillDataToSkillItemUiModelMapper.mapToPresentation(it)

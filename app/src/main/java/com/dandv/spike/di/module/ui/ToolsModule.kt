@@ -6,7 +6,10 @@ import com.squareup.picasso.Picasso
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
+@InstallIn(SingletonComponent::class)
 @Module
 class ToolsModule {
 

@@ -1,6 +1,6 @@
 package com.dandv.data.profile.datasource.local.mapper
 
-import com.dandv.consultant.domain.common.basemapper.BaseMapperToDomain
+import com.dandv.domain.common.basemapper.BaseMapperToDomain
 import com.dandv.data.profile.model.ProfileRoomDto
 import com.dandv.domain.profile.entity.*
 import com.google.gson.Gson

@@ -1,7 +1,7 @@
 package com.dandv.spike.ui.home
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.dandv.domain.profile.entity.ProfileEntity
 import com.dandv.domain.profile.entity.collection.CollectionType
 import com.dandv.domain.profile.usecase.GetProfileUseCase

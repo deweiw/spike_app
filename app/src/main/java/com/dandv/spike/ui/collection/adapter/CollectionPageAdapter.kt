@@ -1,7 +1,7 @@
 package com.dandv.spike.ui.collection.adapter
 
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.dandv.domain.profile.entity.collection.CollectionType
 import com.dandv.spike.ui.collection.mapper.CollectionItemUiModel
 import com.dandv.spike.ui.collection.viewholder.CollectionItemViewHolder

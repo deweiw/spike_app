@@ -12,8 +12,7 @@ class GetCollectionUseCase
 ) : UseCaseEmptyInput<CollectionEntity> {
 
     override suspend fun buildUseCase(): CollectionEntity {
-        val collectionType = profileRepository.getCollectionType()
-        return when (collectionType) {
+        return when (profileRepository.getCollectionType()) {
             CollectionType.SKILLS -> profileRepository.getSkills()
             CollectionType.EXPERIENCES -> profileRepository.getExperiences()
             CollectionType.PROJECTS -> profileRepository.getProjects()

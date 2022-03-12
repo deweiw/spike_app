@@ -3,7 +3,7 @@
  */
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-
+apply plugin: 'dagger.hilt.android.plugin'
 apply from: "${rootDir}/buildsystem/project_shared.gradle"
 apply from: "${rootDir}/buildsystem/android_environment.gradle"
 
@@ -14,11 +14,9 @@ dependencies {
     annotationProcessor(ApplicationAnnotationDependencies.daggerCompiler) {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
-
-    //Dagger Android
-    annotationProcessor DaggerAndroid.daggerAndroidProcessor
-    implementation DaggerAndroid.daggerSupport
-    kapt DaggerAndroid.daggerAndroidProcessor
+    // Hilt
+    implementation DIAndroid.hiltAndroid
+    kapt DIAndroid.hiltCompiler
 
     //Android architecture components
     implementation AndroidArchitectureComponentsDependencies.lifecycleExtensions

@@ -1,10 +1,9 @@
 package com.dandv.spike.ui.collection
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.dandv.domain.profile.entity.collection.CollectionType
 import com.dandv.spike.R
 import com.dandv.spike.ui.BaseActivity
@@ -13,6 +12,7 @@ import com.dandv.spike.ui.collection.adapter.CollectionPageAdapterFactory
 import com.dandv.spike.ui.collection.mapper.CollectionItemUiModel
 import com.dandv.spike.ui.collection.model.CollectionPageViewState
 import com.dandv.spike.ui.collection.viewholder.ViewHolderFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_collection.*
 import javax.inject.Inject
 
@@ -23,6 +23,7 @@ import javax.inject.Inject
  *
  * Due to the demo purpose, the error handling view is not implemented, only a log created
  */
+@AndroidEntryPoint
 class CollectionDetailActivity : BaseActivity() {
 
     @Inject
@@ -34,7 +35,7 @@ class CollectionDetailActivity : BaseActivity() {
     @Inject
     lateinit var viewHolderFactory: ViewHolderFactory
 
-    private lateinit var collectionPageViewModel: CollectionPageViewModel
+    private val collectionPageViewModel: CollectionPageViewModel by viewModels { viewModelFactory }
     private lateinit var collectionAdapter: CollectionPageAdapter
 
     override fun onResume() {
@@ -46,15 +47,10 @@ class CollectionDetailActivity : BaseActivity() {
         return R.layout.activity_collection
     }
 
-    override fun setupViewModel() {
-        collectionPageViewModel =
-            ViewModelProviders.of(this, viewModelFactory).get(CollectionPageViewModel::class.java)
-    }
-
     override fun observeViewModelState() {
-        collectionPageViewModel.getCollectionPageViewState().observe(this, Observer {
+        collectionPageViewModel.getCollectionPageViewState().observe(this) {
             onPageStateChanged(it)
-        })
+        }
     }
 
     private fun onPageStateChanged(collectionPageViewState: CollectionPageViewState?) {
