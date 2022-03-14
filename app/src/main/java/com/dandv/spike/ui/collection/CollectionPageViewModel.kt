@@ -1,7 +1,7 @@
 package com.dandv.spike.ui.collection
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.dandv.domain.profile.entity.collection.CollectionEntity
 import com.dandv.domain.profile.usecase.GetCollectionUseCase
 import com.dandv.spike.common.BaseViewModel
@@ -10,6 +10,9 @@ import com.dandv.spike.ui.collection.mapper.ExperienceDataToExperienceItemUiMode
 import com.dandv.spike.ui.collection.mapper.ProjectDataToProjectItemUiModelMapper
 import com.dandv.spike.ui.collection.mapper.SkillDataToSkillItemUiModelMapper
 import com.dandv.spike.ui.collection.model.CollectionPageViewState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,6 +23,7 @@ import javax.inject.Inject
  * View Model takes the responsibility to convert the data from the domain entity to the format which needed
  * by the UI (UiModels).
  */
+@HiltViewModel
 class CollectionPageViewModel
 @Inject constructor(
     private val getCollectionUseCase: GetCollectionUseCase,
@@ -29,31 +33,32 @@ class CollectionPageViewModel
     coroutineScopeFactory: CoroutineScopeFactory
 ) : BaseViewModel(coroutineScopeFactory) {
 
-    private val collectionPageViewState = MutableLiveData<CollectionPageViewState>()
-
-    fun getCollectionPageViewState(): LiveData<CollectionPageViewState> = collectionPageViewState
+    private val _collectionPageViewState =
+        MutableStateFlow<CollectionPageViewState>(CollectionPageViewState.Loading)
+    val collectionPageViewState: Flow<CollectionPageViewState> = _collectionPageViewState
 
     fun requestCollectionData() {
-        collectionPageViewState.postValue(CollectionPageViewState.Loading)
         coroutineScope.launch {
-            when (val result = getCollectionUseCase.buildUseCase()) {
-                is CollectionEntity.SkillCollection -> collectionPageViewState.postValue(
-                    CollectionPageViewState.Skills(result.skills.map {
-                        skillDataToSkillItemUiModelMapper.mapToPresentation(it)
-                    })
-                )
-                is CollectionEntity.ProjectCollection -> collectionPageViewState.postValue(
-                    CollectionPageViewState.Projects(result.projects.map {
-                        projectDataToProjectItemUiModelMapper.mapToPresentation(it)
-                    })
-                )
-                is CollectionEntity.ExperienceCollection -> collectionPageViewState.postValue(
-                    CollectionPageViewState.Experiences(result.experiences.map {
-                        experienceDataToExperienceItemUiModelMapper.mapToPresentation(it)
-                    })
-                )
-                CollectionEntity.Empty,
-                CollectionEntity.Error -> collectionPageViewState.postValue(CollectionPageViewState.Error)
+            getCollectionUseCase.buildUseCase().collect { collectionEntity ->
+                when (collectionEntity) {
+                    is CollectionEntity.SkillCollection -> _collectionPageViewState.emit(
+                        CollectionPageViewState.Skills(collectionEntity.skills.map {
+                            skillDataToSkillItemUiModelMapper.mapToPresentation(it)
+                        })
+                    )
+                    is CollectionEntity.ProjectCollection -> _collectionPageViewState.emit(
+                        CollectionPageViewState.Projects(collectionEntity.projects.map {
+                            projectDataToProjectItemUiModelMapper.mapToPresentation(it)
+                        })
+                    )
+                    is CollectionEntity.ExperienceCollection -> _collectionPageViewState.emit(
+                        CollectionPageViewState.Experiences(collectionEntity.experiences.map {
+                            experienceDataToExperienceItemUiModelMapper.mapToPresentation(it)
+                        })
+                    )
+                    CollectionEntity.Empty,
+                    CollectionEntity.Error -> _collectionPageViewState.emit(CollectionPageViewState.Error)
+                }
             }
         }
     }

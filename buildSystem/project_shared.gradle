@@ -5,6 +5,5 @@ apply plugin: 'kotlin-kapt'
 
 dependencies {
     implementation ApplicationImplementationDependencies.values()
-    kapt ApplicationAnnotationDependencies.values()
     testImplementation UnitTestDependencies.values()
 }

@@ -3,7 +3,7 @@ package com.dandv.spike.ui.collection
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.dandv.domain.profile.entity.collection.CollectionType
 import com.dandv.spike.R
 import com.dandv.spike.ui.BaseActivity
@@ -27,15 +27,12 @@ import javax.inject.Inject
 class CollectionDetailActivity : BaseActivity() {
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
     lateinit var collectionPageAdapterFactory: CollectionPageAdapterFactory
 
     @Inject
     lateinit var viewHolderFactory: ViewHolderFactory
 
-    private val collectionPageViewModel: CollectionPageViewModel by viewModels { viewModelFactory }
+    private val collectionPageViewModel: CollectionPageViewModel by viewModels()
     private lateinit var collectionAdapter: CollectionPageAdapter
 
     override fun onResume() {
@@ -48,8 +45,10 @@ class CollectionDetailActivity : BaseActivity() {
     }
 
     override fun observeViewModelState() {
-        collectionPageViewModel.getCollectionPageViewState().observe(this) {
-            onPageStateChanged(it)
+        lifecycleScope.launchWhenStarted {
+            collectionPageViewModel.collectionPageViewState.collect {
+                onPageStateChanged(it)
+            }
         }
     }
 

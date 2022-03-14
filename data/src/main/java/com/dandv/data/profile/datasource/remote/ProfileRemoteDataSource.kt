@@ -7,6 +7,10 @@ import com.dandv.data.profile.datasource.remote.mapper.collection.ProjectDtoToPr
 import com.dandv.data.profile.datasource.remote.mapper.collection.SkillDtoToSkillDataMapper
 import com.dandv.domain.profile.entity.ProfileEntity
 import com.dandv.domain.profile.entity.collection.CollectionEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 /**
@@ -20,16 +24,20 @@ class ProfileRemoteDataSource
     private val projectDtoToProjectDataMapper: ProjectDtoToProjectDataMapper,
     private val experienceDtoToExperienceDataMapper: ExperienceDtoToExperienceDataMapper
 ) {
-    fun getProfile(): ProfileEntity {
-        return try {
-            val response = networkClient.getProfile().execute()
-            when (response.isSuccessful) {
-                true -> response.body()?.let { profileDtoToProfileEntityMapper.mapToDomain(it) } ?: ProfileEntity.Empty
-                else -> ProfileEntity.Error
+    fun getProfile(): Flow<ProfileEntity> {
+        return flow {
+            val result = try {
+                val response = networkClient.getProfile().execute()
+                when (response.isSuccessful) {
+                    true -> response.body()?.let { profileDtoToProfileEntityMapper.mapToDomain(it) }
+                        ?: ProfileEntity.Empty
+                    else -> ProfileEntity.Error
+                }
+            } catch (error: Exception) {
+                ProfileEntity.Error
             }
-        } catch (error: Exception) {
-            ProfileEntity.Error
-        }
+            emit(result)
+        }.flowOn(Dispatchers.IO)
     }
 
     fun getSkills(): CollectionEntity {

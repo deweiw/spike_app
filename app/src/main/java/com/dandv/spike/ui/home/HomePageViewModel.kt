@@ -1,7 +1,5 @@
 package com.dandv.spike.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.dandv.domain.profile.entity.ProfileEntity
 import com.dandv.domain.profile.entity.collection.CollectionType
 import com.dandv.domain.profile.usecase.GetProfileUseCase
@@ -10,9 +8,13 @@ import com.dandv.spike.common.BaseViewModel
 import com.dandv.spike.common.CoroutineScopeFactory
 import com.dandv.spike.ui.home.mapper.ProfileDataToHomePageUiModelMapper
 import com.dandv.spike.ui.home.model.HomePageViewState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class HomePageViewModel
 @Inject constructor(
     private val getProfileUseCase: GetProfileUseCase,
@@ -21,22 +23,22 @@ class HomePageViewModel
     coroutineScopeFactory: CoroutineScopeFactory
 ) : BaseViewModel(coroutineScopeFactory) {
 
-    private val pageViewState = MutableLiveData<HomePageViewState>()
-
-    fun getPageViewState(): LiveData<HomePageViewState> = pageViewState
+    private val _pageViewStateFlow = MutableStateFlow<HomePageViewState>(HomePageViewState.Loading)
+    val pageViewState: Flow<HomePageViewState> = _pageViewStateFlow
 
     fun requestProfile() {
-        pageViewState.postValue(HomePageViewState.Loading)
         coroutineScope.launch {
-            val profile = getProfileUseCase.buildUseCase()
-            when (profile) {
-                is ProfileEntity.Data -> pageViewState.postValue(
-                    HomePageViewState.Success(
-                        profileDataToHomePageUiModelMapper.mapToPresentation(profile.profileData)
+            getProfileUseCase.buildUseCase().collect {
+                when (it) {
+                    is ProfileEntity.Data -> _pageViewStateFlow.emit(
+                        HomePageViewState.Success(
+                            profileDataToHomePageUiModelMapper.mapToPresentation(it.profileData)
+                        )
                     )
-                )
-                ProfileEntity.Empty,
-                ProfileEntity.Error -> pageViewState.postValue(HomePageViewState.Error)
+                    else -> {
+                        _pageViewStateFlow.emit(HomePageViewState.Error)
+                    }
+                }
             }
         }
     }
@@ -44,7 +46,7 @@ class HomePageViewModel
     fun requestCollection(collectionType: CollectionType) {
         coroutineScope.launch {
             setCollectionTypeUseCase.buildUseCase(collectionType)
-            pageViewState.postValue(HomePageViewState.Navigation)
+            _pageViewStateFlow.emit(HomePageViewState.Navigation)
         }
     }
 }

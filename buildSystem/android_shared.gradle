@@ -11,9 +11,6 @@ dependencies {
     implementation ApplicationImplementationDependencies.values()
     implementation AndroidDependencies.values()
 
-    annotationProcessor(ApplicationAnnotationDependencies.daggerCompiler) {
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-    }
     // Hilt
     implementation DIAndroid.hiltAndroid
     kapt DIAndroid.hiltCompiler
@@ -26,5 +23,5 @@ dependencies {
 
     // Unit test
     testImplementation AndroidTestDependencies.values()
-    kaptTest ApplicationAnnotationDependencies.daggerCompiler
+    kaptTest DIAndroid.hiltCompiler
 }

@@ -7,7 +7,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.dandv.domain.profile.entity.collection.CollectionType
 import com.dandv.spike.R
 import com.dandv.spike.common.toVisibility
@@ -18,6 +18,7 @@ import com.dandv.spike.ui.home.model.HomePageViewState
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 /**
@@ -31,13 +32,10 @@ import javax.inject.Inject
 class MainActivity : BaseActivity(), View.OnClickListener {
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
     lateinit var picasso: Picasso
 
     @VisibleForTesting
-    internal val homePageViewModel: HomePageViewModel by viewModels { viewModelFactory }
+    internal val homePageViewModel: HomePageViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,9 +60,11 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun observeViewModelState() {
-        homePageViewModel.getPageViewState().observe(this, Observer {
-            onPageStateChanged(it)
-        })
+        lifecycleScope.launchWhenStarted {
+            homePageViewModel.pageViewState.collect {
+                onPageStateChanged(it)
+            }
+        }
     }
 
     private fun onPageStateChanged(homePageViewState: HomePageViewState?) {
