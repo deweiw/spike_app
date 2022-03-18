@@ -1,20 +1,18 @@
 package com.dandv.spike.ui.collection
 
+import android.os.Bundle
 import android.util.Log
-import android.view.View
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.lifecycleScope
-import com.dandv.domain.profile.entity.collection.CollectionType
-import com.dandv.spike.R
-import com.dandv.spike.ui.BaseActivity
-import com.dandv.spike.ui.collection.adapter.CollectionPageAdapter
-import com.dandv.spike.ui.collection.adapter.CollectionPageAdapterFactory
-import com.dandv.spike.ui.collection.mapper.CollectionItemUiModel
+import com.dandv.spike.components.LoadingProgressBar
+import com.dandv.spike.components.collection.ExperiencesList
+import com.dandv.spike.components.collection.ProjectList
+import com.dandv.spike.components.collection.SkillsList
 import com.dandv.spike.ui.collection.model.CollectionPageViewState
-import com.dandv.spike.ui.collection.viewholder.ViewHolderFactory
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_collection.*
-import javax.inject.Inject
 
 /**
  * From CollectionDetailActivity, user can check details of Skills, Projects and Experiences.
@@ -24,27 +22,21 @@ import javax.inject.Inject
  * Due to the demo purpose, the error handling view is not implemented, only a log created
  */
 @AndroidEntryPoint
-class CollectionDetailActivity : BaseActivity() {
-
-    @Inject
-    lateinit var collectionPageAdapterFactory: CollectionPageAdapterFactory
-
-    @Inject
-    lateinit var viewHolderFactory: ViewHolderFactory
+class CollectionDetailActivity : AppCompatActivity() {
 
     private val collectionPageViewModel: CollectionPageViewModel by viewModels()
-    private lateinit var collectionAdapter: CollectionPageAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initCollectionView()
+    }
 
     override fun onResume() {
         super.onResume()
         collectionPageViewModel.requestCollectionData()
     }
 
-    override fun getLayoutResource(): Int {
-        return R.layout.activity_collection
-    }
-
-    override fun observeViewModelState() {
+    private fun initCollectionView() {
         lifecycleScope.launchWhenStarted {
             collectionPageViewModel.collectionPageViewState.collect {
                 onPageStateChanged(it)
@@ -53,45 +45,23 @@ class CollectionDetailActivity : BaseActivity() {
     }
 
     private fun onPageStateChanged(collectionPageViewState: CollectionPageViewState?) {
-        collectionPageViewState?.let {
-            when (it) {
-                CollectionPageViewState.Loading -> handleLoadingView()
-                CollectionPageViewState.Error -> handleErrorView()
-                is CollectionPageViewState.Skills -> handleCollectionView(
-                    it.skills,
-                    CollectionType.SKILLS
-                )
-                is CollectionPageViewState.Experiences -> handleCollectionView(
-                    it.experiences,
-                    CollectionType.EXPERIENCES
-                )
-                is CollectionPageViewState.Projects -> handleCollectionView(
-                    it.projects,
-                    CollectionType.PROJECTS
-                )
+        setContent {
+            collectionPageViewState?.let {
+                when (it) {
+                    CollectionPageViewState.Loading -> LoadingProgressBar(true)
+                    CollectionPageViewState.Error -> HandleErrorView()
+                    is CollectionPageViewState.Skills -> SkillsList(it.skills)
+                    is CollectionPageViewState.Experiences -> ExperiencesList(it.experiences)
+                    is CollectionPageViewState.Projects -> ProjectList(it.projects)
+                }
             }
         }
     }
 
-    private fun handleCollectionView(
-        list: List<CollectionItemUiModel>,
-        collectionType: CollectionType
-    ) {
-        progress_bar.visibility = View.GONE
-        collection_list.visibility = View.VISIBLE
-        collection_list.adapter =
-            collectionPageAdapterFactory.create(collectionType, viewHolderFactory)
-                .also { collectionAdapter = it }
-        collectionAdapter.updateAdapter(list)
-    }
-
-    private fun handleErrorView() {
+    @Composable
+    private fun HandleErrorView() {
+        LoadingProgressBar(false)
         // TODO Can show an error view here
-        progress_bar.visibility = View.GONE
         Log.e("CollectionActivity", "error")
-    }
-
-    private fun handleLoadingView() {
-        progress_bar.visibility = View.VISIBLE
     }
 }

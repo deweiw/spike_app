@@ -1,9 +1,5 @@
 package com.dandv.spike.ui.home
 
-import androidx.lifecycle.Observer
-import com.dandv.spike.ui.home.model.HomePageViewState
-import com.nhaarman.mockito_kotlin.argumentCaptor
-import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import dagger.hilt.android.testing.BindValue

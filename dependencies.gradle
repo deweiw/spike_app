@@ -7,7 +7,7 @@ ext {
     lifecycle_version = '2.4.1'
     room_version = '2.3.0'
     coroutines_version = '1.6.0'
-    okhttp_version = '3.11.0'
+    okhttp_version = '4.2.1'
     gson_version = '2.8.5'
     junit_version = '4.12'
     test_runner_version = '1.4.0'
@@ -19,10 +19,13 @@ ext {
     gradle_version = "7.1.2"
     appcompat_version = "1.4.1"
     android_legacy_support = "1.0.0"
-    material_version = "1.5.0"
+    compose_version = "1.1.1"
     arch_version = "2.1.0"
     lifecycle_extension_version = "2.2.0"
     activity_version = "1.4.0"
+    viewmodel_compose_version = "2.4.1"
+    coil_compose_version = "2.0.0-rc02"
+    constraintlayout_compose_version = "1.0.0"
 
     ApplicationImplementationDependencies = [
             kotlin    : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
@@ -38,8 +41,17 @@ ext {
     ]
 
     AndroidUiDependencies = [
-            designsupport: "com.google.android.material:material:$material_version",
-            picasso      : "com.squareup.picasso:picasso:$picasso_version"
+            composeUi        : "androidx.compose.ui:ui:$compose_version",
+            composeUiTooling : "androidx.compose.ui:ui-tooling:$compose_version",
+            composeFoundation: "androidx.compose.foundation:foundation:$compose_version",
+            materialIconCore : "androidx.compose.material:material-icons-core:$compose_version",
+            materialIconExt  : "androidx.compose.material:material-icons-extended:$compose_version",
+            composeActivity  : "androidx.activity:activity-compose:$activity_version",
+            composeViewModel : "androidx.lifecycle:lifecycle-viewmodel-compose:$viewmodel_compose_version",
+            designsupport    : "androidx.compose.material:material:$compose_version",
+            picasso          : "com.squareup.picasso:picasso:$picasso_version",
+            coilCompose      : "io.coil-kt:coil-compose:$coil_compose_version",
+            constraintLayout : "androidx.constraintlayout:constraintlayout-compose:$constraintlayout_compose_version"
     ]
 
     NetworkRequestDependencies = [
@@ -64,7 +76,8 @@ ext {
             robolectric      : "org.robolectric:robolectric:$robolectric_version",
             coreTesting      : "androidx.arch.core:core-testing:$arch_version",
             roomTest         : "androidx.room:room-testing:$room_version",
-            hiltTest         : "com.google.dagger:hilt-android-testing:$hilt_version"
+            hiltTest         : "com.google.dagger:hilt-android-testing:$hilt_version",
+            composeTest      : "androidx.compose.ui:ui-test-junit4:$compose_version"
     ]
 
     AndroidArchitectureComponentsDependencies = [

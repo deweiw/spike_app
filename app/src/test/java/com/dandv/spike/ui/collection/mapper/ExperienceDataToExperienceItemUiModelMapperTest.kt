@@ -31,7 +31,8 @@ class ExperienceDataToExperienceItemUiModelMapperTest {
         given(stringBuilder.toString()).willReturn(expectDuration)
 
         // when
-        val result = cut.mapToPresentation(ExperienceData(expectCompany, "from", "to", expectSummary))
+        val result =
+            cut.mapToPresentation(ExperienceData(expectCompany, "from", "to", expectSummary))
 
         // then
         assertEquals(expectCompany, result.company)

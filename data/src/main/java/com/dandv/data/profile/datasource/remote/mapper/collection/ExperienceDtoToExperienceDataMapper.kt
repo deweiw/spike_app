@@ -1,7 +1,7 @@
 package com.dandv.data.profile.datasource.remote.mapper.collection
 
-import com.dandv.domain.common.basemapper.BaseMapperToDomain
 import com.dandv.data.profile.model.ExperienceDto
+import com.dandv.domain.common.basemapper.BaseMapperToDomain
 import com.dandv.domain.profile.entity.collection.ExperienceData
 import javax.inject.Inject
 

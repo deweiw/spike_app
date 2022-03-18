@@ -1,7 +1,5 @@
 package com.dandv.spike.ui.collection
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.dandv.domain.profile.entity.collection.CollectionEntity
 import com.dandv.domain.profile.usecase.GetCollectionUseCase
 import com.dandv.spike.common.BaseViewModel
@@ -13,6 +11,7 @@ import com.dandv.spike.ui.collection.model.CollectionPageViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -41,23 +40,23 @@ class CollectionPageViewModel
         coroutineScope.launch {
             getCollectionUseCase.buildUseCase().collect { collectionEntity ->
                 when (collectionEntity) {
-                    is CollectionEntity.SkillCollection -> _collectionPageViewState.emit(
+                    is CollectionEntity.SkillCollection -> _collectionPageViewState.update {
                         CollectionPageViewState.Skills(collectionEntity.skills.map {
                             skillDataToSkillItemUiModelMapper.mapToPresentation(it)
                         })
-                    )
-                    is CollectionEntity.ProjectCollection -> _collectionPageViewState.emit(
+                    }
+                    is CollectionEntity.ProjectCollection -> _collectionPageViewState.update {
                         CollectionPageViewState.Projects(collectionEntity.projects.map {
                             projectDataToProjectItemUiModelMapper.mapToPresentation(it)
                         })
-                    )
-                    is CollectionEntity.ExperienceCollection -> _collectionPageViewState.emit(
+                    }
+                    is CollectionEntity.ExperienceCollection -> _collectionPageViewState.update {
                         CollectionPageViewState.Experiences(collectionEntity.experiences.map {
                             experienceDataToExperienceItemUiModelMapper.mapToPresentation(it)
                         })
-                    )
+                    }
                     CollectionEntity.Empty,
-                    CollectionEntity.Error -> _collectionPageViewState.emit(CollectionPageViewState.Error)
+                    CollectionEntity.Error -> _collectionPageViewState.update { CollectionPageViewState.Error }
                 }
             }
         }

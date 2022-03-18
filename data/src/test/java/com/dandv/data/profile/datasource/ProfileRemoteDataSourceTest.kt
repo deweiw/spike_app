@@ -7,8 +7,10 @@ import com.dandv.data.profile.datasource.remote.mapper.collection.ExperienceDtoT
 import com.dandv.data.profile.datasource.remote.mapper.collection.ProjectDtoToProjectDataMapper
 import com.dandv.data.profile.datasource.remote.mapper.collection.SkillDtoToSkillDataMapper
 import com.dandv.data.profile.model.ProfileDto
+import com.dandv.domain.common.di.TestDispatcherProvider
 import com.dandv.domain.profile.entity.ProfileEntity
 import com.nhaarman.mockito_kotlin.*
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -22,12 +24,16 @@ class ProfileRemoteDataSourceTest {
 
     @Mock
     private lateinit var networkClient: NetworkClient
+
     @Mock
     private lateinit var profileDtoToProfileEntityMapper: ProfileDtoToProfileEntityMapper
+
     @Mock
     private lateinit var skillDtoToSkillDataMapper: SkillDtoToSkillDataMapper
+
     @Mock
     private lateinit var projectDtoToProjectDataMapper: ProjectDtoToProjectDataMapper
+
     @Mock
     private lateinit var experienceDtoToExperienceDataMapper: ExperienceDtoToExperienceDataMapper
     private lateinit var cut: ProfileRemoteDataSource
@@ -40,7 +46,8 @@ class ProfileRemoteDataSourceTest {
             profileDtoToProfileEntityMapper,
             skillDtoToSkillDataMapper,
             projectDtoToProjectDataMapper,
-            experienceDtoToExperienceDataMapper
+            experienceDtoToExperienceDataMapper,
+            TestDispatcherProvider()
         )
     }
 
@@ -54,12 +61,15 @@ class ProfileRemoteDataSourceTest {
         given(response.isSuccessful).willReturn(false)
 
         // when
-        val result = cut.getProfile()
+        runBlocking {
+            cut.getProfile().collect {
+                assertTrue(it is ProfileEntity.Error)
+            }
+        }
 
         // then
         verify(networkClient).getProfile()
         verify(profileDtoToProfileEntityMapper, never()).mapToDomain(any())
-        assertTrue(result is ProfileEntity.Error)
     }
 
     @Test
@@ -70,11 +80,14 @@ class ProfileRemoteDataSourceTest {
         given(call.execute()).willThrow()
 
         // when
-        val result = cut.getProfile()
+        runBlocking {
+            cut.getProfile().collect {
+                assertTrue(it is ProfileEntity.Error)
+            }
+        }
 
         // then
         verify(profileDtoToProfileEntityMapper, never()).mapToDomain(any())
-        assertTrue(result is ProfileEntity.Error)
     }
 
     @Test
@@ -87,12 +100,14 @@ class ProfileRemoteDataSourceTest {
         given(response.isSuccessful).willReturn(true)
 
         // when
-        val result = cut.getProfile()
-
+        runBlocking {
+            cut.getProfile().collect {
+                assertTrue(it is ProfileEntity.Empty)
+            }
+        }
         // then
         verify(networkClient).getProfile()
         verify(profileDtoToProfileEntityMapper, never()).mapToDomain(any())
-        assertTrue(result is ProfileEntity.Empty)
     }
 
     @Test
@@ -109,12 +124,15 @@ class ProfileRemoteDataSourceTest {
         given(profileDtoToProfileEntityMapper.mapToDomain(profileDto)).willReturn(profileEntity)
 
         // when
-        val result = cut.getProfile()
+        runBlocking {
+            cut.getProfile().collect {
+                assertEquals(profileEntity, it)
+            }
+        }
 
         // then
         verify(networkClient).getProfile()
         verify(profileDtoToProfileEntityMapper).mapToDomain(profileDto)
-        assertEquals(profileEntity, result)
     }
 
     // TODO Can test other functions(getProjects, getSkills, getExperiences) with similar scenarios as the above

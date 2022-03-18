@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 import com.dandv.data.profile.model.ProfileRoomDto.Companion.TABLE_NAME
 
 @Entity(tableName = TABLE_NAME)
-data class ProfileRoomDto (
+data class ProfileRoomDto(
 
     @NonNull
     @PrimaryKey

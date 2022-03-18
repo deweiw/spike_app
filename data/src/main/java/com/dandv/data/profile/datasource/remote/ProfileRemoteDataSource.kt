@@ -5,9 +5,9 @@ import com.dandv.data.profile.datasource.remote.mapper.ProfileDtoToProfileEntity
 import com.dandv.data.profile.datasource.remote.mapper.collection.ExperienceDtoToExperienceDataMapper
 import com.dandv.data.profile.datasource.remote.mapper.collection.ProjectDtoToProjectDataMapper
 import com.dandv.data.profile.datasource.remote.mapper.collection.SkillDtoToSkillDataMapper
+import com.dandv.domain.common.di.DispatcherProvider
 import com.dandv.domain.profile.entity.ProfileEntity
 import com.dandv.domain.profile.entity.collection.CollectionEntity
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -22,7 +22,8 @@ class ProfileRemoteDataSource
     private val profileDtoToProfileEntityMapper: ProfileDtoToProfileEntityMapper,
     private val skillDtoToSkillDataMapper: SkillDtoToSkillDataMapper,
     private val projectDtoToProjectDataMapper: ProjectDtoToProjectDataMapper,
-    private val experienceDtoToExperienceDataMapper: ExperienceDtoToExperienceDataMapper
+    private val experienceDtoToExperienceDataMapper: ExperienceDtoToExperienceDataMapper,
+    private val dispatcherProvider: DispatcherProvider
 ) {
     fun getProfile(): Flow<ProfileEntity> {
         return flow {
@@ -37,7 +38,7 @@ class ProfileRemoteDataSource
                 ProfileEntity.Error
             }
             emit(result)
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcherProvider.io)
     }
 
     fun getSkills(): CollectionEntity {

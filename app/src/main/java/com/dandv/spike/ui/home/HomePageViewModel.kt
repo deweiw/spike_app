@@ -11,6 +11,7 @@ import com.dandv.spike.ui.home.model.HomePageViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,13 +29,14 @@ class HomePageViewModel
 
     fun requestProfile() {
         coroutineScope.launch {
-            getProfileUseCase.buildUseCase().collect {
-                when (it) {
-                    is ProfileEntity.Data -> _pageViewStateFlow.emit(
+            getProfileUseCase.buildUseCase().collect { profileEntity ->
+                when (profileEntity) {
+                    is ProfileEntity.Data -> _pageViewStateFlow.update {
                         HomePageViewState.Success(
-                            profileDataToHomePageUiModelMapper.mapToPresentation(it.profileData)
+                            profileDataToHomePageUiModelMapper.mapToPresentation(profileEntity.profileData)
                         )
-                    )
+                    }
+
                     else -> {
                         _pageViewStateFlow.emit(HomePageViewState.Error)
                     }

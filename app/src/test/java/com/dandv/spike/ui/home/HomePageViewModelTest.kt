@@ -1,7 +1,6 @@
 package com.dandv.spike.ui.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import com.dandv.domain.profile.entity.ProfileData
 import com.dandv.domain.profile.entity.ProfileEntity
 import com.dandv.domain.profile.entity.collection.CollectionType

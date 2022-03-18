@@ -8,7 +8,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Cache
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -27,17 +26,9 @@ class ClientModule {
 
     @Singleton
     @Provides
-    internal fun provideInterceptor(): HttpLoggingInterceptor {
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
-        return interceptor
-    }
-
-    @Singleton
-    @Provides
-    internal fun provideOkhttpClient(cache: Cache, interceptor: HttpLoggingInterceptor): OkHttpClient {
+    internal fun provideOkhttpClient(cache: Cache): OkHttpClient {
         val client = OkHttpClient.Builder()
-        client.cache(cache).addInterceptor(interceptor)
+        client.cache(cache)
         return client.build()
     }
 

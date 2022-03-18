@@ -1,7 +1,7 @@
 package com.dandv.data.profile.datasource.remote.mapper
 
-import com.dandv.domain.common.basemapper.BaseMapperToDomain
 import com.dandv.data.profile.model.ProfileDto
+import com.dandv.domain.common.basemapper.BaseMapperToDomain
 import com.dandv.domain.profile.entity.*
 import javax.inject.Inject
 

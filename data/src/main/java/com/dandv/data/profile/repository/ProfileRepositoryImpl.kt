@@ -2,6 +2,7 @@ package com.dandv.data.profile.repository
 
 import com.dandv.data.profile.datasource.local.ProfileLocalDataSource
 import com.dandv.data.profile.datasource.remote.ProfileRemoteDataSource
+import com.dandv.domain.common.di.DispatcherProvider
 import com.dandv.domain.profile.entity.ProfileEntity
 import com.dandv.domain.profile.entity.collection.CollectionEntity
 import com.dandv.domain.profile.entity.collection.CollectionType
@@ -16,7 +17,8 @@ import kotlinx.coroutines.flow.*
  */
 class ProfileRepositoryImpl(
     private val profileLocalDataSource: ProfileLocalDataSource,
-    private val profileRemoteDataSource: ProfileRemoteDataSource
+    private val profileRemoteDataSource: ProfileRemoteDataSource,
+    private val dispatcherProvider: DispatcherProvider
 ) : ProfileRepository {
 
     private lateinit var collectionType: CollectionType
@@ -36,7 +38,7 @@ class ProfileRepositoryImpl(
                 profileRemoteDataSource.getProfile()
                     .also { profileLocalDataSource.saveProfile(it.first()) }
             }
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcherProvider.io)
     }
 
     override suspend fun setCollectionType(collectionType: CollectionType) {
@@ -51,13 +53,13 @@ class ProfileRepositoryImpl(
         return flow {
             val value = profileRemoteDataSource.getSkills()
             emit(value)
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcherProvider.io)
     }
 
     override suspend fun getProjects(): Flow<CollectionEntity> {
         return flow {
             emit(profileRemoteDataSource.getProjects())
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcherProvider.io)
     }
 
     override suspend fun getExperiences(): Flow<CollectionEntity> {
