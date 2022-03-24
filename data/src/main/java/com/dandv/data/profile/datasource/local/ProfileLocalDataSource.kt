@@ -2,7 +2,12 @@ package com.dandv.data.profile.datasource.local
 
 import com.dandv.data.profile.datasource.local.mapper.ProfileEntityToProfileRoomDtoMapper
 import com.dandv.data.profile.datasource.local.mapper.ProfileRoomDtoToProfileEntityMapper
+import com.dandv.domain.common.di.DispatcherProvider
 import com.dandv.domain.profile.entity.ProfileEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
@@ -13,22 +18,19 @@ class ProfileLocalDataSource
 @Inject constructor(
     private val profileDao: ProfileDao,
     private val profileRoomDtoToProfileEntityMapper: ProfileRoomDtoToProfileEntityMapper,
-    private val profileEntityToProfileRoomDtoMapper: ProfileEntityToProfileRoomDtoMapper
+    private val profileEntityToProfileRoomDtoMapper: ProfileEntityToProfileRoomDtoMapper,
+    private val dispatcherProvider: DispatcherProvider
 ) {
 
-    fun getProfile(): ProfileEntity {
-        return try {
-            profileRoomDtoToProfileEntityMapper.mapToDomain(profileDao.getProfile())
-        } catch (error: Throwable) {
-            ProfileEntity.Error
-        }
+    fun getProfile(): Flow<ProfileEntity> {
+        return profileDao.getProfile().map { profileRoomDtoToProfileEntityMapper.mapToDomain(it) }
+            .flowOn(dispatcherProvider.io)
+            .catch { emit(ProfileEntity.Error) }
     }
 
     fun saveProfile(profileEntity: ProfileEntity) {
-        when (profileEntity) {
-            is ProfileEntity.Data -> profileDao.saveProfile(
-                profileEntityToProfileRoomDtoMapper.mapToData(profileEntity.profileData)
-            )
+        (profileEntity as? ProfileEntity.Data)?.let {
+            profileDao.saveProfile(profileEntityToProfileRoomDtoMapper.mapToData(it.profileData))
         }
     }
 }

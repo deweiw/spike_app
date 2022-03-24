@@ -2,12 +2,13 @@ package com.dandv.data.profile.repository
 
 import com.dandv.data.profile.datasource.local.ProfileLocalDataSource
 import com.dandv.data.profile.datasource.remote.ProfileRemoteDataSource
+import com.dandv.domain.common.di.DispatcherProvider
 import com.dandv.domain.profile.entity.ProfileEntity
 import com.dandv.domain.profile.entity.collection.CollectionEntity
 import com.dandv.domain.profile.entity.collection.CollectionType
 import com.dandv.domain.profile.repository.ProfileRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.*
 
 /**
  * This repository implements repo interface defined in the domain layer.
@@ -16,7 +17,8 @@ import kotlinx.coroutines.withContext
  */
 class ProfileRepositoryImpl(
     private val profileLocalDataSource: ProfileLocalDataSource,
-    private val profileRemoteDataSource: ProfileRemoteDataSource
+    private val profileRemoteDataSource: ProfileRemoteDataSource,
+    private val dispatcherProvider: DispatcherProvider
 ) : ProfileRepository {
 
     private lateinit var collectionType: CollectionType
@@ -28,43 +30,41 @@ class ProfileRepositoryImpl(
      *  for example we can force to refresh the data from the remote by adding a flag and triggered
      *  by user using pull to refresh function.
      */
-    override suspend fun getProfile(): ProfileEntity {
-        return withContext(Dispatchers.IO) {
-            val profileEntity = profileLocalDataSource.getProfile()
-            when (profileEntity) {
-                is ProfileEntity.Data -> profileEntity
-                else -> {
-                    profileRemoteDataSource.getProfile().also {
-                        profileLocalDataSource.saveProfile(it)
-                    }
-                }
+    override suspend fun getProfile(): Flow<ProfileEntity> {
+        return profileLocalDataSource.getProfile().flatMapConcat { profileEntity ->
+            if (profileEntity is ProfileEntity.Data) {
+                flowOf(profileEntity)
+            } else {
+                profileRemoteDataSource.getProfile()
+                    .also { profileLocalDataSource.saveProfile(it.first()) }
             }
-        }
+        }.flowOn(dispatcherProvider.io)
     }
 
     override suspend fun setCollectionType(collectionType: CollectionType) {
         this.collectionType = collectionType
     }
 
-    override suspend fun getCollectionType(): CollectionType {
-        return collectionType
+    override suspend fun getCollectionType(): Flow<CollectionType> {
+        return flowOf(collectionType)
     }
 
-    override suspend fun getSkills(): CollectionEntity {
-        return withContext(Dispatchers.IO) {
-            profileRemoteDataSource.getSkills()
-        }
+    override suspend fun getSkills(): Flow<CollectionEntity> {
+        return flow {
+            val value = profileRemoteDataSource.getSkills()
+            emit(value)
+        }.flowOn(dispatcherProvider.io)
     }
 
-    override suspend fun getProjects(): CollectionEntity {
-        return withContext(Dispatchers.IO) {
-            profileRemoteDataSource.getProjects()
-        }
+    override suspend fun getProjects(): Flow<CollectionEntity> {
+        return flow {
+            emit(profileRemoteDataSource.getProjects())
+        }.flowOn(dispatcherProvider.io)
     }
 
-    override suspend fun getExperiences(): CollectionEntity {
-        return withContext(Dispatchers.IO) {
-            profileRemoteDataSource.getExperiences()
-        }
+    override suspend fun getExperiences(): Flow<CollectionEntity> {
+        return flow {
+            emit(profileRemoteDataSource.getExperiences())
+        }.flowOn(Dispatchers.IO)
     }
 }

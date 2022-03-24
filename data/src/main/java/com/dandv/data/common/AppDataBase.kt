@@ -1,7 +1,7 @@
 package com.dandv.data.common
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.RoomDatabase
+import androidx.room.Database
+import androidx.room.RoomDatabase
 import com.dandv.data.profile.datasource.local.ProfileDao
 import com.dandv.data.profile.model.ProfileRoomDto
 

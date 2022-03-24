@@ -1,22 +1,24 @@
 package com.dandv.spike.ui.home
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.VisibleForTesting
 import android.util.Log
-import android.view.View
-import com.dandv.domain.profile.entity.collection.CollectionType
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.annotation.VisibleForTesting
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.lifecycleScope
+import coil.annotation.ExperimentalCoilApi
 import com.dandv.spike.R
-import com.dandv.spike.common.toVisibility
+import com.dandv.spike.components.LoadingProgressBar
+import com.dandv.spike.components.ProfileView
 import com.dandv.spike.ui.BaseActivity
 import com.dandv.spike.ui.collection.CollectionDetailActivity
 import com.dandv.spike.ui.home.model.HomePageUiModel
 import com.dandv.spike.ui.home.model.HomePageViewState
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_main.*
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -26,15 +28,14 @@ import javax.inject.Inject
  *
  * Due to the demo purpose, the error handling view is not implemented, only a log created
  */
-class MainActivity : BaseActivity(), View.OnClickListener {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject
     lateinit var picasso: Picasso
 
     @VisibleForTesting
-    internal lateinit var homePageViewModel: HomePageViewModel
+    internal val homePageViewModel: HomePageViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,48 +47,31 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         homePageViewModel.requestProfile()
     }
 
-    override fun onClick(v: View) {
-        when (v) {
-            skills_layout -> homePageViewModel.requestCollection(CollectionType.SKILLS)
-            project_layout -> homePageViewModel.requestCollection(CollectionType.PROJECTS)
-            experience_layout -> homePageViewModel.requestCollection(CollectionType.EXPERIENCES)
-        }
-    }
-
-    override fun getLayoutResource(): Int {
-        return R.layout.activity_main
-    }
-
-    override fun setupViewModel() {
-        homePageViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomePageViewModel::class.java)
-    }
-
-    override fun observeViewModelState() {
-        homePageViewModel.getPageViewState().observe(this, Observer {
-            onPageStateChanged(it)
-        })
-    }
-
     private fun onPageStateChanged(homePageViewState: HomePageViewState?) {
-        homePageViewState?.let {
-            when (it) {
-                HomePageViewState.Loading -> handleLoadingView()
-                is HomePageViewState.Success -> handleContentView(it.homePageUiModel)
-                HomePageViewState.Error -> handleErrorView()
-                HomePageViewState.Navigation -> navigateToCollectionPage()
+        setContent {
+            homePageViewState?.let {
+                when (it) {
+                    HomePageViewState.Loading -> LoadingProgressBar(true)
+                    is HomePageViewState.Success -> HandleContentView(it.homePageUiModel)
+                    HomePageViewState.Error -> HandleErrorView()
+                    HomePageViewState.Navigation -> navigateToCollectionPage()
+                }
             }
         }
     }
 
     private fun initializeViews() {
-        skills_layout.setOnClickListener(this)
-        project_layout.setOnClickListener(this)
-        experience_layout.setOnClickListener(this)
+        lifecycleScope.launchWhenStarted {
+            homePageViewModel.pageViewState.collect {
+                onPageStateChanged(it)
+            }
+        }
     }
 
-    private fun handleErrorView() {
+    @Composable
+    private fun HandleErrorView() {
+        LoadingProgressBar(false)
         // TODO Can show an error view here
-        progress_bar.visibility = View.GONE
         Log.e("MainActivity", "error")
     }
 
@@ -95,23 +79,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         startActivity(Intent(this, CollectionDetailActivity::class.java))
     }
 
-    private fun handleLoadingView() {
-        progress_bar.visibility = View.VISIBLE
-        content_layout.visibility = View.GONE
-    }
-
-    private fun handleContentView(homePageUiModel: HomePageUiModel) {
-        progress_bar.visibility = View.GONE
-        content_layout.visibility = View.VISIBLE
-        with(homePageUiModel) {
-            picasso.load(imageUrl).placeholder(R.drawable.profile_placeholder).into(profile_image)
-            candidate_name.text = name
-            candidate_phone.text = phone
-            candidate_email.text = email
-            candidate_summary.text = summary
-            skills_layout.visibility = anySkill.toVisibility()
-            experience_layout.visibility = anyExperience.toVisibility()
-            project_layout.visibility = anyProjects.toVisibility()
-        }
+    @ExperimentalCoilApi
+    @Composable
+    private fun HandleContentView(homePageUiModel: HomePageUiModel) {
+        LoadingProgressBar(false)
+        ProfileView(homePageUiModel)
     }
 }

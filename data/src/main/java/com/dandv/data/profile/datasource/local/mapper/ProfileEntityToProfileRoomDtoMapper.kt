@@ -1,7 +1,7 @@
 package com.dandv.data.profile.datasource.local.mapper
 
-import com.dandv.consultant.domain.common.basemapper.BaseMapperToData
 import com.dandv.data.profile.model.ProfileRoomDto
+import com.dandv.domain.common.basemapper.BaseMapperToData
 import com.dandv.domain.profile.entity.ProfileData
 import com.google.gson.Gson
 import javax.inject.Inject

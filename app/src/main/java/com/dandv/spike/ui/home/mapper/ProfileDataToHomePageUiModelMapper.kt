@@ -1,6 +1,6 @@
 package com.dandv.spike.ui.home.mapper
 
-import com.dandv.consultant.domain.common.basemapper.BaseMapperToPresentation
+import com.dandv.domain.common.basemapper.BaseMapperToPresentation
 import com.dandv.domain.profile.entity.ProfileData
 import com.dandv.spike.ui.home.model.HomePageUiModel
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package com.dandv.consultant.domain.common.basemapper
+package com.dandv.domain.common.basemapper
 
 interface BaseMapperToDomain<SOURCE, TARGET> {
 

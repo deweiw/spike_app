@@ -1,39 +1,57 @@
 ext {
 
-    kotlin_version = '1.3.21'
+    kotlin_version = '1.5.31'
     google_service = '27.0.0'
     dagger_version = '2.18'
     retrofit_version = '2.4.0'
-    lifecycle_version = '1.1.1'
-    coroutines_version = '1.1.1'
-    okhttp_version = '3.11.0'
+    lifecycle_version = '2.4.1'
+    room_version = '2.3.0'
+    coroutines_version = '1.6.0'
+    okhttp_version = '4.2.1'
     gson_version = '2.8.5'
     junit_version = '4.12'
-    test_runner_version = '1.0.2'
+    test_runner_version = '1.4.0'
     mockito_kotlin_version = '1.6.0'
     mockito_version = "2.24.5"
-    robolectric_version = "3.8"
-    picasso_version = "2.71828"
+    robolectric_version = "4.7.3"
+    picasso_version = "2.8"
+    hilt_version = "2.40"
+    gradle_version = "7.1.2"
+    appcompat_version = "1.4.1"
+    android_legacy_support = "1.0.0"
+    compose_version = "1.1.1"
+    arch_version = "2.1.0"
+    lifecycle_extension_version = "2.2.0"
+    activity_version = "1.4.0"
+    viewmodel_compose_version = "2.4.1"
+    coil_compose_version = "2.0.0-rc02"
+    constraintlayout_compose_version = "1.0.0"
 
     ApplicationImplementationDependencies = [
             kotlin    : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
-            coroutines: "org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutines_version}",
-            dagger    : "com.google.dagger:dagger:${dagger_version}",
-    ]
-
-    ApplicationAnnotationDependencies = [
-            daggerCompiler: "com.google.dagger:dagger-compiler:${dagger_version}",
+            coroutines: "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version",
+            dagger    : "com.google.dagger:dagger:$dagger_version",
     ]
 
     AndroidDependencies = [
-            appcompat        : "com.android.support:appcompat-v7:$google_service",
-            v4support        : "com.android.support:support-v4:$google_service",
+            appcompat        : "androidx.appcompat:appcompat:$appcompat_version",
+            activityKtx      : "androidx.activity:activity-ktx:$activity_version",
+            v4support        : "androidx.legacy:legacy-support-v4:$android_legacy_support",
             coroutinesAndroid: "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     ]
 
     AndroidUiDependencies = [
-            designsupport: "com.android.support:design:$google_service",
-            picasso      : "com.squareup.picasso:picasso:$picasso_version"
+            composeUi        : "androidx.compose.ui:ui:$compose_version",
+            composeUiTooling : "androidx.compose.ui:ui-tooling:$compose_version",
+            composeFoundation: "androidx.compose.foundation:foundation:$compose_version",
+            materialIconCore : "androidx.compose.material:material-icons-core:$compose_version",
+            materialIconExt  : "androidx.compose.material:material-icons-extended:$compose_version",
+            composeActivity  : "androidx.activity:activity-compose:$activity_version",
+            composeViewModel : "androidx.lifecycle:lifecycle-viewmodel-compose:$viewmodel_compose_version",
+            designsupport    : "androidx.compose.material:material:$compose_version",
+            picasso          : "com.squareup.picasso:picasso:$picasso_version",
+            coilCompose      : "io.coil-kt:coil-compose:$coil_compose_version",
+            constraintLayout : "androidx.constraintlayout:constraintlayout-compose:$constraintlayout_compose_version"
     ]
 
     NetworkRequestDependencies = [
@@ -50,26 +68,30 @@ ext {
             kotlinTest   : "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version",
             mockitoKotlin: "com.nhaarman:mockito-kotlin:$mockito_kotlin_version",
             mockito      : "org.mockito:mockito-inline:$mockito_version",
-            coreTesting  : "android.arch.core:core-testing:$lifecycle_version"
+            coreTesting  : "androidx.arch.core:core-testing:$arch_version"
     ]
 
     AndroidTestDependencies = [
-            androidTestRunner: "com.android.support.test:runner:$test_runner_version",
+            androidTestRunner: "androidx.test:runner:$test_runner_version",
             robolectric      : "org.robolectric:robolectric:$robolectric_version",
-            coreTesting      : "android.arch.core:core-testing:$lifecycle_version"
+            coreTesting      : "androidx.arch.core:core-testing:$arch_version",
+            roomTest         : "androidx.room:room-testing:$room_version",
+            hiltTest         : "com.google.dagger:hilt-android-testing:$hilt_version",
+            composeTest      : "androidx.compose.ui:ui-test-junit4:$compose_version"
     ]
 
     AndroidArchitectureComponentsDependencies = [
-            lifecycleExtensions: "android.arch.lifecycle:extensions:$lifecycle_version",
-            lifecycleCompiler  : "android.arch.lifecycle:compiler:$lifecycle_version",
-            roomRuntime        : "android.arch.persistence.room:runtime:$lifecycle_version",
-            roomCompiler       : "android.arch.persistence.room:compiler:$lifecycle_version",
-            roomRxJava         : "android.arch.persistence.room:rxjava2:$lifecycle_version"
+            lifecycleExtensions: "androidx.lifecycle:lifecycle-extensions:$lifecycle_extension_version",
+            lifecycleCompiler  : "androidx.lifecycle:lifecycle-compiler:$lifecycle_version",
+            roomKtx            : "androidx.room:room-ktx:$room_version",
+            roomCompiler       : "androidx.room:room-compiler:$room_version",
     ]
 
-    DaggerAndroid = [
+    DIAndroid = [
             daggerAndroidProcessor: "com.google.dagger:dagger-android-processor:$dagger_version",
-            daggerSupport         : "com.google.dagger:dagger-android-support:$dagger_version"
+            daggerSupport         : "com.google.dagger:dagger-android-support:$dagger_version",
+            hiltAndroid           : "com.google.dagger:hilt-android:$hilt_version",
+            hiltCompiler          : "com.google.dagger:hilt-android-compiler:$hilt_version"
     ]
 
     DebugDependencies = [

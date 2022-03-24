@@ -3,6 +3,7 @@ package com.dandv.domain.profile.repository
 import com.dandv.domain.profile.entity.ProfileEntity
 import com.dandv.domain.profile.entity.collection.CollectionEntity
 import com.dandv.domain.profile.entity.collection.CollectionType
+import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
     /**
@@ -12,7 +13,7 @@ interface ProfileRepository {
      * When request profile is an empty profile, return [ProfileEntity.Empty]
      * When request profile is a valid profile, return [ProfileEntity.Data]
      */
-    suspend fun getProfile(): ProfileEntity
+    suspend fun getProfile(): Flow<ProfileEntity>
 
     /**
      * Set collection type in order to request the remote collection data details
@@ -26,7 +27,7 @@ interface ProfileRepository {
      *
      * @return [CollectionType]
      */
-    suspend fun getCollectionType(): CollectionType
+    suspend fun getCollectionType(): Flow<CollectionType>
 
     /**
      * Get list of Skills
@@ -34,7 +35,7 @@ interface ProfileRepository {
      * @return [CollectionEntity.Error] if request failed, [CollectionEntity.Empty] if request an empty list and
      * [CollectionEntity.SkillCollection] if request list with Skills
      */
-    suspend fun getSkills(): CollectionEntity
+    suspend fun getSkills(): Flow<CollectionEntity>
 
     /**
      * Get list of Projects
@@ -42,7 +43,7 @@ interface ProfileRepository {
      * @return [CollectionEntity.Error] if request failed, [CollectionEntity.Empty] if request an empty list and
      * [CollectionEntity.ProjectCollection] if request list with Projects
      */
-    suspend fun getProjects(): CollectionEntity
+    suspend fun getProjects(): Flow<CollectionEntity>
 
     /**
      * Get list of Experiences
@@ -50,5 +51,5 @@ interface ProfileRepository {
      * @return [CollectionEntity.Error] if request failed, [CollectionEntity.Empty] if request an empty list and
      * [CollectionEntity.ExperienceCollection] if request list with Experiences
      */
-    suspend fun getExperiences(): CollectionEntity
+    suspend fun getExperiences(): Flow<CollectionEntity>
 }

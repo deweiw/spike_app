@@ -1,6 +1,6 @@
 package com.dandv.spike.common
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.cancel
 
 open class BaseViewModel(coroutineScopeFactory: CoroutineScopeFactory) : ViewModel() {
